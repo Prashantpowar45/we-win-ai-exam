@@ -1,5 +1,19 @@
 export type Language = 'en' | 'hi' | 'mr';
 
+export interface UserProfile {
+  id: string;
+  name: string;
+  email: string;
+  targetExam: string;
+  state: string;
+  college: string;
+  xp: number;
+  streakDays: number;
+  testsCompleted: number;
+  averageScore: number;
+  accuracy: number;
+}
+
 export interface Question {
   id: string;
   questionText: {

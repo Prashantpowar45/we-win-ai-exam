@@ -2,7 +2,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Language, MockTest, UserAnswer } from '@/lib/types';
+import { Language, MockTest, UserAnswer, UserProfile } from '@/lib/types';
 import { SAMPLE_MOCK_TESTS } from '@/lib/mockExamData';
 import { Navbar } from '@/components/Navbar';
 import { Hero } from '@/components/Hero';
@@ -14,13 +14,29 @@ import { AiTutorModal } from '@/components/AiTutorModal';
 import { Leaderboard } from '@/components/Leaderboard';
 import { GamificationModal } from '@/components/GamificationModal';
 import { AdminPanel } from '@/components/AdminPanel';
+import { AuthModal } from '@/components/AuthModal';
 import { Footer } from '@/components/Footer';
 
 export default function Home() {
   const [language, setLanguage] = useState<Language>('en');
   const [activeSection, setActiveSection] = useState<'home' | 'categories' | 'leaderboard'>('home');
   
-  // Modals and Active Test state
+  // User Auth State
+  const [user, setUser] = useState<UserProfile | null>({
+    id: 'usr-prashant',
+    name: 'Prashant Powar',
+    email: 'prashant.powar@wewin23.com',
+    targetExam: 'SSC CGL & MPSC Rajyaseva',
+    state: 'Maharashtra',
+    college: 'Shivaji University',
+    xp: 3800,
+    streakDays: 7,
+    testsCompleted: 24,
+    averageScore: 182.5,
+    accuracy: 94.2
+  });
+
+  const [authOpen, setAuthOpen] = useState(false);
   const [activeTest, setActiveTest] = useState<MockTest | null>(null);
   const [completedTestResult, setCompletedTestResult] = useState<{
     test: MockTest;
@@ -33,6 +49,11 @@ export default function Home() {
   const [gamificationOpen, setGamificationOpen] = useState(false);
 
   const handleStartTest = (testId?: string) => {
+    // If not logged in, prompt Auth Modal first
+    if (!user) {
+      setAuthOpen(true);
+      return;
+    }
     const targetTest = SAMPLE_MOCK_TESTS.find(t => t.id === testId) || SAMPLE_MOCK_TESTS[0];
     setActiveTest(targetTest);
   };
@@ -47,7 +68,6 @@ export default function Home() {
     setActiveTest(null);
   };
 
-  // If in active test execution mode, render full-screen Exam Engine
   if (activeTest) {
     return (
       <ExamInterface
@@ -64,8 +84,11 @@ export default function Home() {
     <main className="min-h-screen bg-slate-950 text-slate-100 flex flex-col selection:bg-win-500 selection:text-white">
       {/* Top Navbar */}
       <Navbar
+        user={user}
         language={language}
         onLanguageChange={setLanguage}
+        onOpenAuth={() => setAuthOpen(true)}
+        onLogout={() => setUser(null)}
         onOpenAiTutor={() => setAiTutorOpen(true)}
         onOpenAdmin={() => setAdminOpen(true)}
         onOpenGamification={() => setGamificationOpen(true)}
@@ -116,6 +139,15 @@ export default function Home() {
       <Footer />
 
       {/* Modals */}
+      <AuthModal
+        isOpen={authOpen}
+        onClose={() => setAuthOpen(false)}
+        onLoginSuccess={(loggedUser) => {
+          setUser(loggedUser);
+          setAuthOpen(false);
+        }}
+      />
+
       {completedTestResult && (
         <TestResultModal
           test={completedTestResult.test}
