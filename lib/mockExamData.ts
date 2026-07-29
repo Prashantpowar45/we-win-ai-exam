@@ -62,48 +62,30 @@ export const EXAM_CATEGORIES = [
 export const SAMPLE_MOCK_TESTS: MockTest[] = [
   {
     id: 'cgl-full-01',
-    title: 'SSC CGL Tier 1 Full Mock Test #01',
+    title: 'SSC CGL Proctored Full Mock Test 2026 #01',
     category: 'SSC Exams',
     subCategory: 'SSC CGL',
     durationMinutes: 60,
     totalMarks: 200,
-    questionCount: 5,
+    questionCount: 8,
     difficulty: 'Medium',
-    attemptsCount: 14250,
+    attemptsCount: 18450,
+    sections: [
+      { id: 'sec-quant', name: 'Quantitative Aptitude', questionCount: 2, marks: 50 },
+      { id: 'sec-reasoning', name: 'Reasoning', questionCount: 2, marks: 50 },
+      { id: 'sec-english', name: 'English / Verbal Ability', questionCount: 2, marks: 50 },
+      { id: 'sec-gk', name: 'General Knowledge / Current Affairs', questionCount: 2, marks: 50 }
+    ],
     questions: [
+      // Quant Questions
       {
-        id: 'q1',
+        id: 'q-quant-1',
         category: 'SSC Exams',
-        subject: 'General Awareness',
-        topic: 'Space Missions & ISRO (2020-2026)',
-        difficulty: 'Medium',
-        marks: 2,
-        negativeMarks: 0.5,
-        timeLimitSec: 45,
-        questionText: {
-          en: 'Which ISRO mission successfully landed on the South Pole of the Moon in 2023?',
-          hi: '2023 में चंद्रमा के दक्षिणी ध्रुव पर सफलतापूर्वक उतरने वाला इसरो (ISRO) का कौन सा मिशन था?',
-          mr: '२०२३ मध्ये चंद्राच्या दक्षिण धु्रवावर यशस्वीपणे उतरणारे इस्रोचे (ISRO) कोणते अभियान होते?'
-        },
-        options: {
-          en: ['Chandrayaan-1', 'Chandrayaan-2', 'Chandrayaan-3', 'Aditya-L1'],
-          hi: ['चंद्रयान-1', 'चंद्रयान-2', 'चंद्रयान-3', 'आदित्य-L1'],
-          mr: ['चंद्रयान-१', 'चंद्रयान-२', 'चंद्रयान-३', 'आदित्य-L1']
-        },
-        correctOptionIndex: 2,
-        explanation: {
-          en: 'Chandrayaan-3 was launched by ISRO on July 14, 2023, and successfully soft-landed near the lunar south pole on August 23, 2023, making India the first country to land on the Moon\'s south pole.',
-          hi: 'चंद्रयान-3 को ISRO ने 14 जुलाई 2023 को लॉन्च किया था और 23 अगस्त 2023 को चंद्रमा के दक्षिणी ध्रुव के पास सफलतापूर्वक उतरा। भारत चंद्रमा के दक्षिणी ध्रुव पर उतरने वाला पहला देश बना।',
-          mr: 'चंद्रयान-३ हे इस्रोने १४ जुलै २०२३ रोजी प्रक्षेपित केले आणि २३ ऑगस्ट २०२३ रोजी चंद्राच्या दक्षिण धु्रवावर यशस्वीपणे उतरवले. चंद्राच्या दक्षिण धु्रवावर उतरणारा भारत हा पहिला देश ठरला.'
-        }
-      },
-      {
-        id: 'q2',
-        category: 'Aptitude',
+        section: 'Quantitative Aptitude',
         subject: 'Quantitative Aptitude',
         topic: 'Profit & Loss',
         difficulty: 'Hard',
-        marks: 2,
+        marks: 2.5,
         negativeMarks: 0.5,
         timeLimitSec: 60,
         questionText: {
@@ -118,46 +100,49 @@ export const SAMPLE_MOCK_TESTS: MockTest[] = [
         },
         correctOptionIndex: 1,
         explanation: {
-          en: 'Let Cost Price = 100x. Selling Price = 120x. New Cost Price = 90x. New Selling Price = 90x * 1.3 = 117x. Given: 120x - 117x = ₹18 => 3x = 18 => x = 6. Cost Price = 100 * 6 = ₹600.',
-          hi: 'माना क्रय मूल्य = 100x. विक्रय मूल्य = 120x. नया क्रय मूल्य = 90x. नया विक्रय मूल्य = 90x * 1.3 = 117x. दिया गया है: 120x - 117x = ₹18 => 3x = 18 => x = 6. क्रय मूल्य = 100 * 6 = ₹600.',
-          mr: 'धरा खरेदी किंमत = १००x. विक्री किंमत = १२०x. नवीन खरेदी किंमत = ९०x. नवीन विक्री किंमत = ९०x * १.३ = ११७x. दिलेले: १२०x - ११७x = १८ => ३x = १८ => x = ६. मूळ खरेदी किंमत = १०० * ६ = ₹६००.'
+          en: 'Let Cost Price = 100x. Selling Price = 120x. New Cost Price = 90x. New Selling Price = 90x * 1.3 = 117x. Difference: 120x - 117x = ₹18 => 3x = 18 => x = 6. Cost Price = ₹600.',
+          hi: 'माना क्रय मूल्य = 100x. विक्रय मूल्य = 120x. नया क्रय मूल्य = 90x. नया विक्रय मूल्य = 90x * 1.3 = 117x. 120x - 117x = ₹18 => 3x = 18 => x = 6. क्रय मूल्य = ₹600.',
+          mr: 'धरा खरेदी किंमत = १००x. विक्री किंमत = १२०x. नवीन खरेदी किंमत = ९०x. नवीन विक्री किंमत = ९०x * १.३ = ११७x. फरक = १८ रुपये => ३x = १८ => x = ६. खरेदी किंमत = ₹६००.'
         }
       },
       {
-        id: 'q3',
+        id: 'q-quant-2',
         category: 'SSC Exams',
-        subject: 'General Awareness',
-        topic: 'Indian Constitution & Polity',
+        section: 'Quantitative Aptitude',
+        subject: 'Quantitative Aptitude',
+        topic: 'Time Speed & Distance',
         difficulty: 'Medium',
-        marks: 2,
+        marks: 2.5,
         negativeMarks: 0.5,
-        timeLimitSec: 40,
+        timeLimitSec: 50,
         questionText: {
-          en: 'Which Article of the Indian Constitution empowers the President to declare a National Emergency?',
-          hi: 'भारतीय संविधान का कौन सा अनुच्छेद राष्ट्रपति को राष्ट्रीय आपातकाल घोषित करने की शक्ति देता है?',
-          mr: 'भारतीय राज्यघटनेतील कोणते कलम राष्ट्रपतींना राष्ट्रीय आणीबाणी घोषित करण्याचा अधिकार देते?'
+          en: 'Two trains running in opposite directions cross a man standing on the platform in 27 seconds and 17 seconds respectively and they cross each other in 23 seconds. The ratio of their speeds is:',
+          hi: 'विपरीत दिशाओं में चल रही दो ट्रेनें प्लेटफॉर्म पर खड़े एक व्यक्ति को क्रमशः 27 सेकंड और 17 सेकंड में पार करती हैं तथा वे एक-दूसरे को 23 सेकंड में पार करती हैं। उनकी चालों का अनुपात है:',
+          mr: 'विरुद्ध दिशेने जाणाऱ्या दोन गाड्या प्लॅटफॉर्मवर उभ्या असलेल्या एका माणसाला अनुक्रमे २७ सेकंद आणि १७ सेकंदात ओलांडतात आणि त्या एकमेकांना २३ सेकंदात ओलांडतात. त्यांच्या वेगाचे गुणोत्तर किती?'
         },
         options: {
-          en: ['Article 352', 'Article 356', 'Article 360', 'Article 370'],
-          hi: ['अनुच्छेद 352', 'अनुच्छेद 356', 'अनुच्छेद 360', 'अनुच्छेद 370'],
-          mr: ['कलम ३५२', 'कलम ३५६', 'कलम ३६०', 'कलम ३७०']
+          en: ['1 : 3', '3 : 2', '3 : 4', '2 : 3'],
+          hi: ['1 : 3', '3 : 2', '3 : 4', '2 : 3'],
+          mr: ['१ : ३', '३ : २', '३ : ४', '२ : ३']
         },
-        correctOptionIndex: 0,
+        correctOptionIndex: 1,
         explanation: {
-          en: 'Article 352 allows National Emergency due to war, external aggression, or armed rebellion. Article 356 relates to President\'s Rule in states, and Article 360 covers Financial Emergency.',
-          hi: 'अनुच्छेद 352 युद्ध, बाह्य आक्रमण या सशस्त्र विद्रोह के आधार पर राष्ट्रीय आपातकाल की अनुमति देता है। अनुच्छेद 356 राज्यों में राष्ट्रपति शासन से संबंधित है।',
-          mr: 'कलम ३५२ हे युद्ध, परकीय आक्रमण किंवा सशस्त्र बंडखोरीच्या आधारे राष्ट्रीय आणीबाणी लागू करण्याचा अधिकार देते. कलम ३५६ हे राष्ट्रपती राजवटीशी संबंधित आहे.'
+          en: 'Let speeds be x and y. Lengths = 27x and 17y. Total distance = 27x + 17y. Time to cross each other = (27x + 17y)/(x + y) = 23 => 27x + 17y = 23x + 23y => 4x = 6y => x/y = 3/2.',
+          hi: 'माना चाल x और y हैं। लंबाई = 27x और 17y। पार करने का समय = (27x + 17y)/(x + y) = 23 => 4x = 6y => x/y = 3/2.',
+          mr: 'धरा वेग x व y आहेत. लांबी = २७x व १७y. ओलांडण्याचा वेळ = (२७x + १७y)/(x + y) = २३ => ४x = ६y => x/y = ३/२.'
         }
       },
+      // Reasoning Questions
       {
-        id: 'q4',
-        category: 'Aptitude',
-        subject: 'Logical Reasoning',
+        id: 'q-reason-1',
+        category: 'SSC Exams',
+        section: 'Reasoning',
+        subject: 'Reasoning',
         topic: 'Syllogism',
         difficulty: 'Medium',
-        marks: 2,
+        marks: 2.5,
         negativeMarks: 0.5,
-        timeLimitSec: 45,
+        timeLimitSec: 40,
         questionText: {
           en: 'Statements: 1. All apples are fruits. 2. Some fruits are sweet.\nConclusions: I. Some apples are sweet. II. All fruits are apples.',
           hi: 'कथन: 1. सभी सेब फल हैं। 2. कुछ फल मीठे हैं।\nनिष्कर्ष: I. कुछ सेब मीठे हैं। II. सभी फल सेब हैं।',
@@ -170,62 +155,149 @@ export const SAMPLE_MOCK_TESTS: MockTest[] = [
         },
         correctOptionIndex: 2,
         explanation: {
-          en: 'No direct connection between apples and sweet is guaranteed in statements. Therefore, neither conclusion I nor conclusion II definitely follows.',
-          hi: 'कथनों में सेब और मीठे के बीच कोई सीधा संबंध निश्चित नहीं है। इसलिए, न तो निष्कर्ष I और न ही निष्कर्ष II अनुसरण करता है।',
+          en: 'No direct relation between apples and sweet is guaranteed in the statements. Hence, neither conclusion follows.',
+          hi: 'कथनों में सेब और मीठे के बीच कोई सीधा संबंध निश्चित नहीं है। इसलिए, कोई भी निष्कर्ष अनुसरण नहीं करता है।',
           mr: 'विधानांमध्ये सफरचंद आणि गोड यांच्यात थेट संबंध निश्चित नाही. त्यामुळे एकही निष्कर्ष निघत नाही.'
         }
       },
       {
-        id: 'q5',
-        category: 'State Exams',
-        subject: 'Maharashtra General Knowledge',
-        topic: 'Maharashtra History & Geography',
+        id: 'q-reason-2',
+        category: 'SSC Exams',
+        section: 'Reasoning',
+        subject: 'Reasoning',
+        topic: 'Coding-Decoding',
         difficulty: 'Medium',
-        marks: 2,
+        marks: 2.5,
         negativeMarks: 0.5,
         timeLimitSec: 40,
         questionText: {
-          en: 'Which river is known as the "Dakshin Ganga" of Maharashtra?',
-          hi: 'महाराष्ट्र की किस नदी को "दक्षिण गंगा" के नाम से जाना जाता है?',
-          mr: 'महाराष्ट्रातील कोणत्या नदीला "दक्षिण गंगा" म्हणून ओळखले जाते?'
+          en: 'If "SYSTEM" is coded as "SYSMET" and "NEARER" as "AENRER", then how is "FRACTION" coded?',
+          hi: 'यदि "SYSTEM" को "SYSMET" और "NEARER" को "AENRER" के रूप में कोडित किया जाता है, तो "FRACTION" को कैसे कोडित किया जाएगा?',
+          mr: 'जर "SYSTEM" चे सांकेतिक रूप "SYSMET" असेल आणि "NEARER" चे "AENRER" असेल, तर "FRACTION" कसे लिहिले जाईल?'
         },
         options: {
-          en: ['Krishna', 'Godavari', 'Tapi', 'Bhima'],
-          hi: ['कृष्णा', 'गोदावरी', 'तापी', 'भीमा'],
-          mr: ['कृष्णा', 'गोदावरी', 'तापी', 'भीमा']
+          en: ['CARFTINO', 'CARFNOIT', 'ARFCNOIT', 'FRACNOIT'],
+          hi: ['CARFTINO', 'CARFNOIT', 'ARFCNOIT', 'FRACNOIT'],
+          mr: ['CARFTINO', 'CARFNOIT', 'ARFCNOIT', 'FRACNOIT']
         },
         correctOptionIndex: 1,
         explanation: {
-          en: 'Godavari is the longest river in Maharashtra and Southern India, originating at Trimbakeshwar (Nashik), and is popularly called the "Dakshin Ganga".',
-          hi: 'गोदावरी महाराष्ट्र और दक्षिण भारत की सबसे लंबी नदी है, जो त्र्यंबकेश्वर (नाशिक) से निकलती है और इसे "दक्षिण गंगा" कहा जाता है।',
-          mr: 'गोदावरी ही महाराष्ट्र व दक्षिण भारतातील सर्वात मोठी नदी असून तिचा उगम त्र्यंबकेश्वर (नाशिक) येथे होतो. तिला "दक्षिण गंगा" म्हटले जाते.'
+          en: 'Word is divided into two equal parts of 4 letters. First half FRAC reversed to CARF; Second half TION reversed to NOIT. Result = CARFNOIT.',
+          hi: 'शब्द को 4 अक्षरों के दो भागों में विभाजित किया गया है। पहला भाग FRAC उल्टा होकर CARF बनता है; दूसरा भाग TION उल्टा होकर NOIT बनता है। उत्तर: CARFNOIT.',
+          mr: 'शब्दाचे ४ अक्षरांचे दोन भाग केले आहेत. पहिला भाग FRAC उलट करून CARF होतो; दुसरा भाग TION उलट करून NOIT होतो. उत्तर = CARFNOIT.'
+        }
+      },
+      // English Questions
+      {
+        id: 'q-eng-1',
+        category: 'SSC Exams',
+        section: 'English / Verbal Ability',
+        subject: 'English',
+        topic: 'Error Detection',
+        difficulty: 'Medium',
+        marks: 2.5,
+        negativeMarks: 0.5,
+        timeLimitSec: 35,
+        questionText: {
+          en: 'Select the option that contains a grammatical error: "Neither the principal nor the teachers was present at the meeting."',
+          hi: 'व्याकरण की दृष्टि से अशुद्ध भाग चुनें: "Neither the principal nor the teachers was present at the meeting."',
+          mr: 'व्याकरणाच्या दृष्टीने चुकीचा भाग निवडा: "Neither the principal nor the teachers was present at the meeting."'
+        },
+        options: {
+          en: ['Neither the principal', 'nor the teachers', 'was present', 'at the meeting'],
+          hi: ['Neither the principal', 'nor the teachers', 'was present', 'at the meeting'],
+          mr: ['Neither the principal', 'nor the teachers', 'was present', 'at the meeting']
+        },
+        correctOptionIndex: 2,
+        explanation: {
+          en: 'When subjects are joined by "neither... nor", the verb agrees with the subject closest to it. "teachers" is plural, so it should be "were present".',
+          hi: 'जब विषय "neither... nor" से जुड़ते हैं, तो क्रिया निकटतम विषय के अनुसार होती है। "teachers" बहुवचन है, इसलिए "were present" होना चाहिए।',
+          mr: 'जेव्हा विषय "neither... nor" द्वारे जोडले जातात, तेव्हा क्रियापद जवळच्या विषयानुसार बदलते. "teachers" हे अनेकवचनी असल्याने "were present" असावे.'
+        }
+      },
+      {
+        id: 'q-eng-2',
+        category: 'SSC Exams',
+        section: 'English / Verbal Ability',
+        subject: 'English',
+        topic: 'Synonyms & Antonyms',
+        difficulty: 'Easy',
+        marks: 2.5,
+        negativeMarks: 0.5,
+        timeLimitSec: 30,
+        questionText: {
+          en: 'Select the most appropriate SYNONYM of the given word: "METICULOUS"',
+          hi: 'दिए गए शब्द का सबसे उपयुक्त पर्यायवाची चुनें: "METICULOUS"',
+          mr: 'खालील शब्दाचा अचूक समानार्थी शब्द निवडा: "METICULOUS"'
+        },
+        options: {
+          en: ['Careless', 'Painstaking / Careful', 'Hasty', 'Ignorant'],
+          hi: ['Careless (लापरवाह)', 'Painstaking / Careful (सावधान)', 'Hasty (जल्दबाज)', 'Ignorant (अज्ञानी)'],
+          mr: ['Careless (निष्काळजी)', 'Painstaking / Careful (अत्यंत बारीक लक्ष देणारा)', 'Hasty (घाईगडबडीचा)', 'Ignorant (अज्ञानी)']
+        },
+        correctOptionIndex: 1,
+        explanation: {
+          en: 'Meticulous means showing great attention to detail; very careful and precise. Synonym: Painstaking / Careful.',
+          hi: 'Meticulous का अर्थ है विवरणों पर बहुत ध्यान देने वाला; अत्यंत सावधान। पर्यायवाची: Painstaking / Careful.',
+          mr: 'Meticulous म्हणजे कामात बारीक लक्ष देणारा व अचूकता ठेवणारा. समानार्थी शब्द: Painstaking / Careful.'
+        }
+      },
+      // GK Questions
+      {
+        id: 'q-gk-1',
+        category: 'SSC Exams',
+        section: 'General Knowledge / Current Affairs',
+        subject: 'General Awareness',
+        topic: 'ISRO & Space Missions (2020-2026)',
+        difficulty: 'Medium',
+        marks: 2.5,
+        negativeMarks: 0.5,
+        timeLimitSec: 30,
+        questionText: {
+          en: 'Which ISRO mission successfully landed on the South Pole of the Moon on August 23, 2023?',
+          hi: '23 अगस्त 2023 को चंद्रमा के दक्षिणी ध्रुव पर सफलतापूर्वक उतरने वाला इसरो का कौन सा मिशन था?',
+          mr: '२३ ऑगस्ट २०२३ रोजी चंद्राच्या दक्षिण धु्रवावर यशस्वीपणे उतरणारे इस्रोचे कोणते अभियान होते?'
+        },
+        options: {
+          en: ['Chandrayaan-1', 'Chandrayaan-2', 'Chandrayaan-3', 'Aditya-L1'],
+          hi: ['चंद्रयान-1', 'चंद्रयान-2', 'चंद्रयान-3', 'आदित्य-L1'],
+          mr: ['चंद्रयान-१', 'चंद्रयान-२', 'चंद्रयान-३', 'आदित्य-L1']
+        },
+        correctOptionIndex: 2,
+        explanation: {
+          en: 'Chandrayaan-3 successfully soft-landed near the lunar south pole on August 23, 2023. India became the first country to land on the Moon\'s south pole.',
+          hi: 'चंद्रयान-3 ने 23 अगस्त 2023 को चंद्रमा के दक्षिणी ध्रुव के पास सॉफ्ट लैंडिंग की। भारत दक्षिणी ध्रुव पर उतरने वाला पहला देश बना।',
+          mr: 'चंद्रयान-३ हे २३ ऑगस्ट २०२३ रोजी चंद्राच्या दक्षिण धु्रवावर यशस्वीपणे उतरले. दक्षिण धु्रवावर उतरणारा भारत हा पहिला देश ठरला.'
+        }
+      },
+      {
+        id: 'q-gk-2',
+        category: 'SSC Exams',
+        section: 'General Knowledge / Current Affairs',
+        subject: 'General Awareness',
+        topic: 'Indian Constitution & Polity',
+        difficulty: 'Medium',
+        marks: 2.5,
+        negativeMarks: 0.5,
+        timeLimitSec: 30,
+        questionText: {
+          en: 'Which Article of the Indian Constitution empowers the President to declare a National Emergency?',
+          hi: 'भारतीय संविधान का कौन सा अनुच्छेद राष्ट्रपति को राष्ट्रीय आपातकाल घोषित करने की शक्ति देता है?',
+          mr: 'भारतीय राज्यघटनेतील कोणते कलम राष्ट्रपतींना राष्ट्रीय आणीबाणी घोषित करण्याचा अधिकार देते?'
+        },
+        options: {
+          en: ['Article 352', 'Article 356', 'Article 360', 'Article 370'],
+          hi: ['अनुच्छेद 352', 'अनुच्छेद 356', 'अनुच्छेद 360', 'अनुच्छेद 370'],
+          mr: ['कलम ३५२', 'कलम ३५६', 'कलम ३६०', 'कलम ३७०']
+        },
+        correctOptionIndex: 0,
+        explanation: {
+          en: 'Article 352 deals with National Emergency due to war, external aggression, or armed rebellion. Article 356 relates to President\'s Rule and Article 360 relates to Financial Emergency.',
+          hi: 'अनुच्छेद 352 युद्ध, बाह्य आक्रमण या सशस्त्र विद्रोह के आधार पर राष्ट्रीय आपातकाल से संबंधित है।',
+          mr: 'कलम ३५२ हे युद्ध, परकीय आक्रमण किंवा सशस्त्र बंडखोरीच्या आधारे राष्ट्रीय आणीबाणी लागू करण्याचा अधिकार देते.'
         }
       }
     ]
-  },
-  {
-    id: 'ibps-po-01',
-    title: 'IBPS PO Prelims Grand Test #01',
-    category: 'Bank Exams',
-    subCategory: 'IBPS PO',
-    durationMinutes: 60,
-    totalMarks: 100,
-    questionCount: 5,
-    difficulty: 'Hard',
-    attemptsCount: 9800,
-    questions: []
-  },
-  {
-    id: 'mpsc-rajya-01',
-    title: 'MPSC Rajyaseva Prelims Mock Test #01',
-    category: 'State Exams',
-    subCategory: 'MPSC',
-    durationMinutes: 120,
-    totalMarks: 200,
-    questionCount: 5,
-    difficulty: 'Hard',
-    attemptsCount: 11400,
-    questions: []
   }
 ];
 
@@ -234,13 +306,13 @@ export const SAMPLE_LEADERBOARD: LeaderboardUser[] = [
   { rank: 2, name: 'Priya Deshmukh', score: 191.0, accuracy: 96.5, xp: 4420, avatar: '👩‍🎓', badge: 'Quant Wizard', state: 'Maharashtra', college: 'VJTI Mumbai' },
   { rank: 3, name: 'Rohan Patel', score: 188.5, accuracy: 95.0, xp: 4100, avatar: '👨‍💼', badge: 'GK Master', state: 'Gujarat', college: 'IIT Bombay' },
   { rank: 4, name: 'Ananya Verma', score: 185.0, accuracy: 94.2, xp: 3950, avatar: '👩‍💻', badge: 'SSC Topper', state: 'Delhi', college: 'DU Delhi' },
-  { rank: 5, name: 'Prashant Powar', score: 182.5, accuracy: 93.8, xp: 3800, avatar: '🚀', badge: 'Streak Legend', state: 'Maharashtra', college: 'Shivaji Univ' }
+  { rank: 5, name: 'Prashant Powar', score: 182.5, accuracy: 93.8, xp: 3800, avatar: '🚀', badge: 'Proctored Top Rank', state: 'Maharashtra', college: 'Shivaji Univ' }
 ];
 
 export const USER_BADGES: Badge[] = [
-  { id: 'b1', name: 'First Test Passed', description: 'Completed your 1st mock test on We Win', icon: '🎯', unlocked: true },
+  { id: 'b1', name: 'First Test Passed', description: 'Completed your 1st proctored mock test on We_Win23', icon: '🎯', unlocked: true },
   { id: 'b2', name: '7-Day Streak', description: 'Practiced continuously for 7 days', icon: '🔥', unlocked: true },
-  { id: 'b3', name: 'Accuracy King', description: 'Scored 95%+ accuracy in a mock test', icon: '👑', unlocked: true },
+  { id: 'b3', name: 'Proctored Verified', description: 'Passed camera & anti-cheat monitoring with 0 warnings', icon: '🛡️', unlocked: true },
   { id: 'b4', name: 'GK Specialist 2026', description: 'Solved 100+ Current Affairs questions', icon: '🌐', unlocked: false },
   { id: 'b5', name: 'Speed Demon', description: 'Answered 30 questions under target time', icon: '⚡', unlocked: false },
 ];

@@ -24,12 +24,6 @@ export const Navbar: React.FC<NavbarProps> = ({
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  const langLabels = {
-    en: 'English',
-    hi: 'हिंदी (Hindi)',
-    mr: 'मराठी (Marathi)',
-  };
-
   return (
     <header className="sticky top-0 z-40 bg-slate-950/90 backdrop-blur-md border-b border-slate-800/80 py-3 shadow-xl">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -45,14 +39,15 @@ export const Navbar: React.FC<NavbarProps> = ({
             <div className="flex flex-col">
               <div className="flex items-center gap-1.5">
                 <span className="font-black text-xl tracking-tight text-white group-hover:text-win-300 transition-colors">
-                  We Win
+                  We_Win23
                 </span>
-                <span className="px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider bg-win-500/20 text-win-300 rounded border border-win-500/30">
-                  AI Platform
+                <span className="px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider bg-emerald-500/20 text-emerald-300 rounded border border-emerald-500/30 flex items-center gap-1">
+                  <ShieldCheck className="w-3 h-3 text-emerald-400" />
+                  <span>Proctored AI</span>
                 </span>
               </div>
               <span className="text-[10px] text-slate-400 font-medium">
-                Govt Exam & Aptitude Master
+                Govt Exam & Aptitude System
               </span>
             </div>
           </div>
@@ -82,7 +77,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           {/* Stats, Language, & Action Tools */}
           <div className="hidden sm:flex items-center gap-3">
             
-            {/* Streak & XP Gamification Pills */}
+            {/* Gamification Pills */}
             <button
               onClick={onOpenGamification}
               className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 hover:border-amber-500/50 transition-colors"
@@ -113,16 +108,16 @@ export const Navbar: React.FC<NavbarProps> = ({
               </select>
             </div>
 
-            {/* We Win AI Tutor Button */}
+            {/* We_Win23 AI Tutor Button */}
             <button
               onClick={onOpenAiTutor}
               className="px-3.5 py-2 rounded-xl bg-gradient-to-r from-win-600 to-indigo-600 text-white font-bold text-xs shadow-lg shadow-win-500/20 hover:scale-105 active:scale-95 transition-all flex items-center gap-1.5"
             >
               <Bot className="w-4 h-4 text-win-200 animate-bounce" />
-              <span>We Win AI</span>
+              <span>We_Win23 AI</span>
             </button>
 
-            {/* Admin Console Trigger */}
+            {/* Admin Console */}
             <button
               onClick={onOpenAdmin}
               className="p-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 hover:text-white hover:border-win-500/40 transition-colors"
@@ -135,16 +130,10 @@ export const Navbar: React.FC<NavbarProps> = ({
 
           {/* Mobile Menu Icon */}
           <div className="md:hidden flex items-center gap-2">
-            <button
-              onClick={onOpenAiTutor}
-              className="p-2 rounded-xl bg-win-600 text-white"
-            >
+            <button onClick={onOpenAiTutor} className="p-2 rounded-xl bg-win-600 text-white">
               <Bot className="w-4 h-4" />
             </button>
-            <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-300"
-            >
+            <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="p-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-300">
               {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
           </div>
@@ -166,44 +155,17 @@ export const Navbar: React.FC<NavbarProps> = ({
             </div>
           </div>
 
-          <div className="flex items-center justify-between p-2 rounded-xl bg-slate-900 border border-slate-800 text-xs">
-            <span className="text-slate-400">Language:</span>
-            <div className="flex gap-2 font-bold">
-              {(['en', 'hi', 'mr'] as Language[]).map((l) => (
-                <button
-                  key={l}
-                  onClick={() => onLanguageChange(l)}
-                  className={`px-2.5 py-1 rounded ${language === l ? 'bg-win-600 text-white' : 'text-slate-400'}`}
-                >
-                  {l.toUpperCase()}
-                </button>
-              ))}
-            </div>
-          </div>
-
           <nav className="flex flex-col space-y-1">
-            <button
-              onClick={() => { setMobileMenuOpen(false); onNavigate('home'); }}
-              className="text-left px-3 py-2 rounded-lg text-sm font-semibold text-slate-200 hover:bg-slate-900"
-            >
+            <button onClick={() => { setMobileMenuOpen(false); onNavigate('home'); }} className="text-left px-3 py-2 rounded-lg text-sm font-semibold text-slate-200 hover:bg-slate-900">
               Dashboard
             </button>
-            <button
-              onClick={() => { setMobileMenuOpen(false); onNavigate('categories'); }}
-              className="text-left px-3 py-2 rounded-lg text-sm font-semibold text-slate-200 hover:bg-slate-900"
-            >
+            <button onClick={() => { setMobileMenuOpen(false); onNavigate('categories'); }} className="text-left px-3 py-2 rounded-lg text-sm font-semibold text-slate-200 hover:bg-slate-900">
               Exams & Categories
             </button>
-            <button
-              onClick={() => { setMobileMenuOpen(false); onNavigate('leaderboard'); }}
-              className="text-left px-3 py-2 rounded-lg text-sm font-semibold text-slate-200 hover:bg-slate-900"
-            >
+            <button onClick={() => { setMobileMenuOpen(false); onNavigate('leaderboard'); }} className="text-left px-3 py-2 rounded-lg text-sm font-semibold text-slate-200 hover:bg-slate-900">
               Leaderboard
             </button>
-            <button
-              onClick={() => { setMobileMenuOpen(false); onOpenAdmin(); }}
-              className="text-left px-3 py-2 rounded-lg text-sm font-semibold text-slate-200 hover:bg-slate-900 flex items-center justify-between"
-            >
+            <button onClick={() => { setMobileMenuOpen(false); onOpenAdmin(); }} className="text-left px-3 py-2 rounded-lg text-sm font-semibold text-slate-200 hover:bg-slate-900 flex items-center justify-between">
               <span>Admin Management</span>
               <Settings className="w-4 h-4 text-win-400" />
             </button>

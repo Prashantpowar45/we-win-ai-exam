@@ -20,11 +20,19 @@ export interface Question {
   };
   difficulty: 'Easy' | 'Medium' | 'Hard';
   category: string;
+  section: 'Quantitative Aptitude' | 'Reasoning' | 'English / Verbal Ability' | 'General Knowledge / Current Affairs';
   subject: string;
   topic: string;
   marks: number;
   negativeMarks: number;
   timeLimitSec: number;
+}
+
+export interface SectionInfo {
+  id: string;
+  name: 'Quantitative Aptitude' | 'Reasoning' | 'English / Verbal Ability' | 'General Knowledge / Current Affairs';
+  questionCount: number;
+  marks: number;
 }
 
 export interface MockTest {
@@ -37,6 +45,7 @@ export interface MockTest {
   questionCount: number;
   difficulty: 'Easy' | 'Medium' | 'Hard';
   attemptsCount: number;
+  sections: SectionInfo[];
   questions: Question[];
 }
 
@@ -47,26 +56,10 @@ export interface UserAnswer {
   timeSpentSec: number;
 }
 
-export interface TestResult {
-  testId: string;
-  testTitle: string;
-  score: number;
-  maxScore: number;
-  accuracy: number;
-  percentile: number;
-  globalRank: number;
-  totalTimeSec: number;
-  correctAnswers: number;
-  wrongAnswers: number;
-  unanswered: number;
-  answers: Record<string, UserAnswer>;
-  weakTopics: string[];
-  strongTopics: string[];
-  aiAnalysis: {
-    en: string;
-    hi: string;
-    mr: string;
-  };
+export interface ExamViolationLog {
+  timestamp: string;
+  type: 'tab_switch' | 'window_blur' | 'fullscreen_exit' | 'copy_paste_attempt';
+  warningCount: number;
 }
 
 export interface LeaderboardUser {
