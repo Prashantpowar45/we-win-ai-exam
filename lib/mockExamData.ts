@@ -2,11 +2,19 @@ import { MockTest, LeaderboardUser, Badge, Question } from './types';
 
 export const EXAM_CATEGORIES = [
   {
+    id: 'bsf',
+    name: 'BSF Head Constable & Defense',
+    subExams: ['BSF Head Constable (Ministerial)', 'BSF Tradesman', 'CISF', 'CRPF', 'Police Bharti'],
+    icon: 'ShieldCheck',
+    color: 'from-amber-600 via-orange-600 to-red-600',
+    count: 55
+  },
+  {
     id: 'ssc',
     name: 'SSC Exams',
     subExams: ['SSC CGL Tier 1', 'SSC CHSL', 'SSC MTS', 'SSC GD', 'CPO SI'],
     icon: 'ShieldCheck',
-    color: 'from-blue-600 to-indigo-600',
+    color: 'from-blue-600 via-indigo-600 to-violet-600',
     count: 45
   },
   {
@@ -14,7 +22,7 @@ export const EXAM_CATEGORIES = [
     name: 'Bank & Financial Exams',
     subExams: ['IBPS PO', 'IBPS Clerk', 'SBI PO', 'SBI Clerk', 'RBI Assistant', 'RBI Grade B'],
     icon: 'Building2',
-    color: 'from-emerald-600 to-teal-600',
+    color: 'from-emerald-600 via-teal-600 to-cyan-600',
     count: 38
   },
   {
@@ -22,7 +30,7 @@ export const EXAM_CATEGORIES = [
     name: 'Railway Exams',
     subExams: ['RRB NTPC', 'RRB Group D', 'RRB JE', 'RRB ALP'],
     icon: 'Train',
-    color: 'from-amber-600 to-orange-600',
+    color: 'from-amber-600 via-yellow-600 to-orange-600',
     count: 32
   },
   {
@@ -30,7 +38,7 @@ export const EXAM_CATEGORIES = [
     name: 'UPSC Services',
     subExams: ['UPSC Prelims Paper 1', 'UPSC CSAT Paper 2'],
     icon: 'GraduationCap',
-    color: 'from-purple-600 to-violet-600',
+    color: 'from-purple-600 via-fuchsia-600 to-pink-600',
     count: 28
   },
   {
@@ -38,7 +46,7 @@ export const EXAM_CATEGORIES = [
     name: 'State Exams (Maharashtra & Others)',
     subExams: ['MPSC Rajyaseva', 'Police Bharti', 'Talathi Bharti', 'Gram Sevak', 'Forest Guard'],
     icon: 'Compass',
-    color: 'from-rose-600 to-pink-600',
+    color: 'from-rose-600 via-pink-600 to-purple-600',
     count: 50
   },
   {
@@ -46,7 +54,7 @@ export const EXAM_CATEGORIES = [
     name: 'Aptitude & Logical Reasoning',
     subExams: ['Quant', 'Logical Reasoning', 'Verbal Ability', 'Data Interpretation', 'Coding Aptitude'],
     icon: 'BrainCircuit',
-    color: 'from-cyan-600 to-blue-600',
+    color: 'from-cyan-600 via-blue-600 to-indigo-600',
     count: 65
   },
   {
@@ -54,13 +62,150 @@ export const EXAM_CATEGORIES = [
     name: 'General Knowledge & Current Affairs (2020-2026)',
     subExams: ['2020-2026 Events', 'Indian Constitution', 'ISRO & Defense', 'Economy & Budget', 'Maharashtra GK'],
     icon: 'Globe',
-    color: 'from-amber-500 to-yellow-600',
+    color: 'from-indigo-500 via-purple-600 to-pink-600',
     count: 120
   }
 ];
 
 export const EXPANDED_QUESTION_BANK: Question[] = [
-  // SECTION 1: QUANTITATIVE APTITUDE
+  // BSF REAL EXAM QUESTIONS (FROM PDF ATTACHED)
+  {
+    id: 'q-bsf-1',
+    category: 'BSF Head Constable & Defense',
+    section: 'English / Verbal Ability',
+    subject: 'English Language',
+    topic: 'Para Jumbles / Sentence Rearrangement',
+    difficulty: 'Medium',
+    marks: 2.5,
+    negativeMarks: 0.5,
+    timeLimitSec: 50,
+    questionText: {
+      en: '[BSF 2023 Paper] Arrange the jumbled sentences in correct order:\nA. He wondered why she had contacted him now.\nB. They were mature adults now – very different people from the youngsters of years ago.\nC. On the one hand, he was curious to see her again; on the other hand, he was not sure if Ellen was the same as he had known in the past.\nD. As Sunday approached, George re-read Ellen\'s e-mail several times.',
+      hi: '[BSF 2023 परीक्षा] वाक्यों को सही क्रम में व्यवस्थित करें:\nA. वह सोच रहा था कि उसने अब उससे क्यों संपर्क किया है।\nB. वे अब परिपक्व वयस्क थे।\nC. एक तरफ वह उसे देखने के लिए उत्सुक था, दूसरी तरफ अनिश्चित था।\nD. जैसे ही रविवार पास आया, जॉर्ज ने एलेन का ईमेल पढ़ा।',
+      mr: '[BSF २०२३ परीक्षा] वाक्यांचा योग्य क्रम लावा:\nA. तिने आता त्याला का संपर्क केला असावा असा विचार तो करत होता.\nB. ते आता प्रौढ झाले होते.\nC. एका बाजूला त्याला तिला पुन्हा पाहण्याची उत्सुकता होती, तर दुसऱ्या बाजूला शंका होती.\nD. रविवार जवळ येत असताना जॉर्जने एलेनचा ईमेल पुन्हा वाचला.'
+    },
+    options: {
+      en: ['ABDC', 'DACB', 'CADB', 'BCAD'],
+      hi: ['ABDC', 'DACB', 'CADB', 'BCAD'],
+      mr: ['ABDC', 'DACB', 'CADB', 'BCAD']
+    },
+    correctOptionIndex: 1,
+    explanation: {
+      en: 'Correct sequence is DACB. Paragraph begins with D (George reading Ellen\'s email as Sunday approached), followed by A (wondering why she contacted him), C (his mixed feelings), and B (reflecting on their maturity).',
+      hi: 'सही क्रम DACB है। पैराग्राफ D से शुरू होता है जब जॉर्ज रविवार करीब आने पर एलेन का ईमेल पढ़ता है, फिर A, C और B आता है।',
+      mr: 'योग्य क्रम DACB आहे. परिच्छेदाची सुरुवात D पासून होते, त्यानंतर A, C आणि B क्रम येतो.'
+    }
+  },
+  {
+    id: 'q-bsf-2',
+    category: 'BSF Head Constable & Defense',
+    section: 'English / Verbal Ability',
+    subject: 'English Language',
+    topic: 'Antonyms',
+    difficulty: 'Easy',
+    marks: 2.5,
+    negativeMarks: 0.5,
+    timeLimitSec: 30,
+    questionText: {
+      en: '[BSF 2023 Paper] Choose the word OPPOSITE in meaning to the underlined word:\n"The actor came to the function with disheveled hair."',
+      hi: '[BSF 2023 परीक्षा] "disheveled" शब्द का विलोम शब्द चुनें:\n"The actor came to the function with disheveled hair."',
+      mr: '[BSF २०२३ परीक्षा] "disheveled" या शब्दाचा विरुद्धार्थी शब्द निवडा:'
+    },
+    options: {
+      en: ['rumpled', 'slovenly', 'tidy', 'messy'],
+      hi: ['rumpled (बिखरा हुआ)', 'slovenly (लापरवाह)', 'tidy (साफ-सुथरा / व्यवस्थित)', 'messy (अस्त-व्यस्त)'],
+      mr: ['rumpled (विस्कटलेले)', 'slovenly (गलिच्छ)', 'tidy (व्यवस्थित व नीटनेटके)', 'messy (अस्तव्यस्त)']
+    },
+    correctOptionIndex: 2,
+    explanation: {
+      en: '"Disheveled" means untidy or disordered (hair/clothes). The exact opposite (antonym) is "tidy" (neat and orderly).',
+      hi: '"Disheveled" का अर्थ अस्त-व्यस्त या बिखरा हुआ है। इसका विलोम शब्द "tidy" (व्यवस्थित/साफ) है।',
+      mr: '"Disheveled" म्हणजे विस्कटलेले किंवा अनियंत्रित. त्याचा विरुद्धार्थी शब्द "tidy" (नीटनेटके व व्यवस्थित) आहे.'
+    }
+  },
+  {
+    id: 'q-bsf-3',
+    category: 'BSF Head Constable & Defense',
+    section: 'English / Verbal Ability',
+    subject: 'English Language',
+    topic: 'Synonyms',
+    difficulty: 'Easy',
+    marks: 2.5,
+    negativeMarks: 0.5,
+    timeLimitSec: 30,
+    questionText: {
+      en: '[BSF 2023 Paper] Select the most appropriate SYNONYM of the underlined word:\n"They have a reputation of being neither industrious nor intelligent."',
+      hi: '[BSF 2023] "industrious" का सबसे उपयुक्त पर्यायवाची शब्द चुनें:',
+      mr: '[BSF २०२३] "industrious" या शब्दाचा योग्य समानार्थी शब्द निवडा:'
+    },
+    options: {
+      en: ['Tolerant', 'Arrogant', 'Diligent', 'Negligent'],
+      hi: ['Tolerant (सहनशील)', 'Arrogant (घमंडी)', 'Diligent (मेहनती / परिश्रमी)', 'Negligent (लापरवाह)'],
+      mr: ['Tolerant (सहनशील)', 'Arrogant (अहंकारी)', 'Diligent (कष्टाळू / कल्पक)', 'Negligent (निष्काळजी)']
+    },
+    correctOptionIndex: 2,
+    explanation: {
+      en: '"Industrious" means hard-working and devoted. Its synonym is "Diligent".',
+      hi: '"Industrious" का अर्थ मेहनती होता है। इसका पर्यायवाची "Diligent" है।',
+      mr: '"Industrious" म्हणजे मेहनती व कष्टाळू. त्याचा समानार्थी शब्द "Diligent" आहे.'
+    }
+  },
+  {
+    id: 'q-bsf-4',
+    category: 'BSF Head Constable & Defense',
+    section: 'Reasoning',
+    subject: 'General Intelligence',
+    topic: 'Mathematical Operations & Coding',
+    difficulty: 'Hard',
+    marks: 2.5,
+    negativeMarks: 0.5,
+    timeLimitSec: 60,
+    questionText: {
+      en: '[BSF 2023 Paper] In a code: "&" means +, "#" means ×, "@" means ÷, "$" means −. Find the value of:\n45 & 35 $ (14 # 7) & 63 @ 9 # 5 $ (14 $ 11) = ?',
+      hi: '[BSF 2023] कोड में: "&" का अर्थ +, "#" का अर्थ ×, "@" का अर्थ ÷, "$" का अर्थ − है। मान ज्ञात कीजिए:\n45 & 35 $ (14 # 7) & 63 @ 9 # 5 $ (14 $ 11) = ?',
+      mr: '[BSF २०२३] कोडमध्ये: "&" म्हणजे +, "#" म्हणजे ×, "@" म्हणजे ÷, "$" म्हणजे −. तर किंमत काढा:\n45 & 35 $ (14 # 7) & 63 @ 9 # 5 $ (14 $ 11) = ?'
+    },
+    options: {
+      en: ['17', '27', '11', '14'],
+      hi: ['17', '27', '11', '14'],
+      mr: ['१७', '२७', '११', '१४']
+    },
+    correctOptionIndex: 3,
+    explanation: {
+      en: 'Replacing symbols: 45 + 35 - (14 * 7) + (63 / 9 * 5) - (14 - 11)\n= 45 + 35 - 98 + (7 * 5) - 3\n= 80 - 98 + 35 - 3 = 14.',
+      hi: 'प्रतीक बदलने पर: 45 + 35 - (14 * 7) + (63 / 9 * 5) - (14 - 11) = 80 - 98 + 35 - 3 = 14.',
+      mr: 'चिन्हे बदलल्यास: ४५ + ३५ - (१४ * ७) + (६३ / ९ * ५) - (१४ - ११) = ८० - ९८ + ३५ - ३ = १४.'
+    }
+  },
+  {
+    id: 'q-bsf-5',
+    category: 'BSF Head Constable & Defense',
+    section: 'Quantitative Aptitude',
+    subject: 'Numerical Aptitude',
+    topic: 'Speed & Ratio',
+    difficulty: 'Medium',
+    marks: 2.5,
+    negativeMarks: 0.5,
+    timeLimitSec: 45,
+    questionText: {
+      en: '[BSF 2023 Paper] What is the ratio of speeds of two cars, one moving at 60 km/h and the other at 5 m/s?',
+      hi: '[BSF 2023] 60 किमी/घंटा और 5 मी/सेकंड की चाल से चलने वाली दो कारों की चालों का अनुपात क्या है?',
+      mr: '[BSF २०२३] ६० किमी/तास आणि ५ मी/सेकंद वेगाने जाणाऱ्या दोन गाड्यांच्या वेगाचे गुणोत्तर किती?'
+    },
+    options: {
+      en: ['10 : 3', '3 : 10', '1 : 12', '12 : 1'],
+      hi: ['10 : 3', '3 : 10', '1 : 12', '12 : 1'],
+      mr: ['१० : ३', '३ : १०', '१ : १२', '१२ : १']
+    },
+    correctOptionIndex: 0,
+    explanation: {
+      en: 'Convert 5 m/s to km/h: 5 * (18/5) = 18 km/h. Ratio = 60 : 18 = 10 : 3.',
+      hi: '5 m/s को km/h में बदलें: 5 * 18/5 = 18 km/h। अनुपात = 60 : 18 = 10 : 3.',
+      mr: '५ m/s चे km/h मध्ये रूपांतर करा: ५ * १८/५ = १८ km/h. गुणोत्तर = ६० : १८ = १० : ३.'
+    }
+  },
+
+  // QUANTITATIVE APTITUDE
   {
     id: 'q-quant-1',
     category: 'SSC Exams',
@@ -115,35 +260,8 @@ export const EXPANDED_QUESTION_BANK: Question[] = [
       mr: 'धरा वेग x व y आहेत. लांबी = २७x व १७y. ओलांडण्याचा वेळ = (२७x + १७y)/(x + y) = २३ => ४x = ६y => x/y = ३/२.'
     }
   },
-  {
-    id: 'q-quant-3',
-    category: 'Bank Exams',
-    section: 'Quantitative Aptitude',
-    subject: 'Quantitative Aptitude',
-    topic: 'Simple & Compound Interest',
-    difficulty: 'Hard',
-    marks: 2.5,
-    negativeMarks: 0.5,
-    timeLimitSec: 60,
-    questionText: {
-      en: 'The difference between simple interest and compound interest on a sum of money at 10% per annum for 2 years is ₹631. Find the principal sum.',
-      hi: '10% प्रति वर्ष की दर से 2 वर्षों के लिए किसी राशि पर साधारण ब्याज और चक्रवृद्धि ब्याज का अंतर ₹631 है। मूलधन ज्ञात कीजिए।',
-      mr: '१०% प्रतिवर्ष दराने २ वर्षांसाठी एका रक्कमेवरील सरळव्याज आणि चक्रवाढव्याज यांतील फरक ६३१ रुपये आहे. तर ती मूळ रक्कम शोधा.'
-    },
-    options: {
-      en: ['₹63,100', '₹60,000', '₹65,000', '₹62,500'],
-      hi: ['₹63,100', '₹60,000', '₹65,000', '₹62,500'],
-      mr: ['₹६३,१००', '₹६०,०००', '₹६५,०००', '₹६२,५००']
-    },
-    correctOptionIndex: 0,
-    explanation: {
-      en: 'Difference formula for 2 years: Diff = P * (R/100)^2. Here 631 = P * (10/100)^2 => 631 = P * 1/100 => P = ₹63,100.',
-      hi: '2 वर्ष का अंतर सूत्र: Diff = P * (R/100)^2 => 631 = P * 1/100 => P = ₹63,100.',
-      mr: '२ वर्षांच्या फरकाचे सूत्र: Diff = P * (R/100)^2 => ६३१ = P * १/१०० => P = ₹६३,१००.'
-    }
-  },
 
-  // SECTION 2: REASONING
+  // REASONING
   {
     id: 'q-reason-1',
     category: 'SSC Exams',
@@ -171,118 +289,8 @@ export const EXPANDED_QUESTION_BANK: Question[] = [
       mr: 'विधानांमध्ये सफरचंद आणि गोड यांच्यात थेट संबंध निश्चित नाही. त्यामुळे एकही निष्कर्ष निघत नाही.'
     }
   },
-  {
-    id: 'q-reason-2',
-    category: 'SSC Exams',
-    section: 'Reasoning',
-    subject: 'Reasoning',
-    topic: 'Coding-Decoding',
-    difficulty: 'Medium',
-    marks: 2.5,
-    negativeMarks: 0.5,
-    timeLimitSec: 40,
-    questionText: {
-      en: 'If "SYSTEM" is coded as "SYSMET" and "NEARER" as "AENRER", then how is "FRACTION" coded?',
-      hi: 'यदि "SYSTEM" को "SYSMET" और "NEARER" को "AENRER" के रूप में कोडित किया जाता है, तो "FRACTION" को कैसे कोडित किया जाएगा?',
-      mr: 'जर "SYSTEM" चे सांकेतिक रूप "SYSMET" असेल आणि "NEARER" चे "AENRER" असेल, तर "FRACTION" कसे लिहिले जाईल?'
-    },
-    options: {
-      en: ['CARFTINO', 'CARFNOIT', 'ARFCNOIT', 'FRACNOIT'],
-      hi: ['CARFTINO', 'CARFNOIT', 'ARFCNOIT', 'FRACNOIT'],
-      mr: ['CARFTINO', 'CARFNOIT', 'ARFCNOIT', 'FRACNOIT']
-    },
-    correctOptionIndex: 1,
-    explanation: {
-      en: 'Word is divided into two equal parts of 4 letters. First half FRAC reversed to CARF; Second half TION reversed to NOIT. Result = CARFNOIT.',
-      hi: 'शब्द को 4 अक्षरों के दो भागों में विभाजित किया गया है। पहला भाग FRAC उल्टा होकर CARF बनता है; दूसरा भाग TION उल्टा होकर NOIT बनता है। उत्तर: CARFNOIT.',
-      mr: 'शब्दाचे ४ अक्षरांचे दोन भाग केले आहेत. पहिला भाग FRAC उलट करून CARF होतो; दुसरा भाग TION उलट करून NOIT होतो. उत्तर = CARFNOIT.'
-    }
-  },
-  {
-    id: 'q-reason-3',
-    category: 'State Exams',
-    section: 'Reasoning',
-    subject: 'Reasoning',
-    topic: 'Blood Relation',
-    difficulty: 'Easy',
-    marks: 2.5,
-    negativeMarks: 0.5,
-    timeLimitSec: 35,
-    questionText: {
-      en: 'Pointing to a photograph, a man said, "I have no brother or sister but that man\'s father is my father\'s son." Whose photograph was it?',
-      hi: 'एक तस्वीर की ओर इशारा करते हुए एक व्यक्ति ने कहा, "मेरा कोई भाई या बहन नहीं है, लेकिन उस आदमी का पिता मेरे पिता का बेटा है।" वह तस्वीर किसकी थी?',
-      mr: 'एका फोटोकडे दाखवत एक माणूस म्हणाला, "मला भाऊ किंवा बहीण नाही, पण त्या माणसाचे वडील हे माझ्या वडिलांचा मुलगा आहेत." तर तो फोटो कोणाचा होता?'
-    },
-    options: {
-      en: ['His own photograph', 'His son\'s photograph', 'His father\'s photograph', 'His nephew\'s photograph'],
-      hi: ['उसकी अपनी तस्वीर', 'उसके बेटे की तस्वीर', 'उसके पिता की तस्वीर', 'उसके भतीजे की तस्वीर'],
-      mr: ['त्याचा स्वतःचा फोटो', 'त्याच्या मुलाचा फोटो', 'त्याच्या वडिलांचा फोटो', 'त्याच्या पुतण्याचा फोटो']
-    },
-    correctOptionIndex: 1,
-    explanation: {
-      en: '"My father\'s son" = the man himself (since he has no siblings). So "that man\'s father = myself". Therefore, the photograph is of his son.',
-      hi: '"मेरे पिता का बेटा" = वह व्यक्ति स्वयं। अतः उस आदमी का पिता = वह स्वयं। इसलिए फोटो उसके बेटे की है।',
-      mr: '"माझ्या वडिलांचा मुलगा" = तो माणूस स्वतः (कारण त्याला भाऊ-बहीण नाहीत). म्हणून त्या मुलाचे वडील = तो स्वतः. उत्तर: त्याच्या मुलाचा फोटो.'
-    }
-  },
 
-  // SECTION 3: ENGLISH / VERBAL ABILITY
-  {
-    id: 'q-eng-1',
-    category: 'SSC Exams',
-    section: 'English / Verbal Ability',
-    subject: 'English',
-    topic: 'Error Detection',
-    difficulty: 'Medium',
-    marks: 2.5,
-    negativeMarks: 0.5,
-    timeLimitSec: 35,
-    questionText: {
-      en: 'Select the option that contains a grammatical error: "Neither the principal nor the teachers was present at the meeting."',
-      hi: 'व्याकरण की दृष्टि से अशुद्ध भाग चुनें: "Neither the principal nor the teachers was present at the meeting."',
-      mr: 'व्याकरणाच्या दृष्टीने चुकीचा भाग निवडा: "Neither the principal nor the teachers was present at the meeting."'
-    },
-    options: {
-      en: ['Neither the principal', 'nor the teachers', 'was present', 'at the meeting'],
-      hi: ['Neither the principal', 'nor the teachers', 'was present', 'at the meeting'],
-      mr: ['Neither the principal', 'nor the teachers', 'was present', 'at the meeting']
-    },
-    correctOptionIndex: 2,
-    explanation: {
-      en: 'When subjects are joined by "neither... nor", the verb agrees with the subject closest to it. "teachers" is plural, so it should be "were present".',
-      hi: 'जब विषय "neither... nor" से जुड़ते हैं, तो क्रिया निकटतम विषय के अनुसार होती है। "teachers" बहुवचन है, इसलिए "were present" होना चाहिए।',
-      mr: 'जेव्हा विषय "neither... nor" द्वारे जोडले जातात, तेव्हा क्रियापद जवळच्या विषयानुसार बदलते. "teachers" हे अनेकवचनी असल्याने "were present" असावे.'
-    }
-  },
-  {
-    id: 'q-eng-2',
-    category: 'SSC Exams',
-    section: 'English / Verbal Ability',
-    subject: 'English',
-    topic: 'Synonyms & Antonyms',
-    difficulty: 'Easy',
-    marks: 2.5,
-    negativeMarks: 0.5,
-    timeLimitSec: 30,
-    questionText: {
-      en: 'Select the most appropriate SYNONYM of the given word: "METICULOUS"',
-      hi: 'दिए गए शब्द का सबसे उपयुक्त पर्यायवाची चुनें: "METICULOUS"',
-      mr: 'खालील शब्दाचा अचूक समानार्थी शब्द निवडा: "METICULOUS"'
-    },
-    options: {
-      en: ['Careless', 'Painstaking / Careful', 'Hasty', 'Ignorant'],
-      hi: ['Careless (लापरवाह)', 'Painstaking / Careful (सावधान)', 'Hasty (जल्दबाज)', 'Ignorant (अज्ञानी)'],
-      mr: ['Careless (निष्काळजी)', 'Painstaking / Careful (अत्यंत बारीक लक्ष देणारा)', 'Hasty (घाईगडबडीचा)', 'Ignorant (अज्ञानी)']
-    },
-    correctOptionIndex: 1,
-    explanation: {
-      en: 'Meticulous means showing great attention to detail; very careful and precise. Synonym: Painstaking / Careful.',
-      hi: 'Meticulous का अर्थ है विवरणों पर बहुत ध्यान देने वाला; अत्यंत सावधान। पर्यायवाची: Painstaking / Careful.',
-      mr: 'Meticulous म्हणजे कामात बारीक लक्ष देणारा व अचूकता ठेवणारा. समानार्थी शब्द: Painstaking / Careful.'
-    }
-  },
-
-  // SECTION 4: GENERAL KNOWLEDGE & CURRENT AFFAIRS (2020-2026)
+  // GK 2020-2026
   {
     id: 'q-gk-1',
     category: 'SSC Exams',
@@ -309,64 +317,28 @@ export const EXPANDED_QUESTION_BANK: Question[] = [
       hi: 'चंद्रयान-3 ने 23 अगस्त 2023 को चंद्रमा के दक्षिणी ध्रुव के पास सॉफ्ट लैंडिंग की। भारत दक्षिणी ध्रुव पर उतरने वाला पहला देश बना।',
       mr: 'चंद्रयान-३ हे २३ ऑगस्ट २०२३ रोजी चंद्राच्या दक्षिण धु्रवावर यशस्वीपणे उतरले. दक्षिण धु्रवावर उतरणारा भारत हा पहिला देश ठरला.'
     }
-  },
-  {
-    id: 'q-gk-2',
-    category: 'SSC Exams',
-    section: 'General Knowledge / Current Affairs',
-    subject: 'General Awareness',
-    topic: 'Indian Constitution & Polity',
-    difficulty: 'Medium',
-    marks: 2.5,
-    negativeMarks: 0.5,
-    timeLimitSec: 30,
-    questionText: {
-      en: 'Which Article of the Indian Constitution empowers the President to declare a National Emergency?',
-      hi: 'भारतीय संविधान का कौन सा अनुच्छेद राष्ट्रपति को राष्ट्रीय आपातकाल घोषित करने की शक्ति देता है?',
-      mr: 'भारतीय राज्यघटनेतील कोणते कलम राष्ट्रपतींना राष्ट्रीय आणीबाणी घोषित करण्याचा अधिकार देते?'
-    },
-    options: {
-      en: ['Article 352', 'Article 356', 'Article 360', 'Article 370'],
-      hi: ['अनुच्छेद 352', 'अनुच्छेद 356', 'अनुच्छेद 360', 'अनुच्छेद 370'],
-      mr: ['कलम ३५२', 'कलम ३५६', 'कलम ३६०', 'कलम ३७०']
-    },
-    correctOptionIndex: 0,
-    explanation: {
-      en: 'Article 352 deals with National Emergency due to war, external aggression, or armed rebellion. Article 356 relates to President\'s Rule and Article 360 relates to Financial Emergency.',
-      hi: 'अनुच्छेद 352 युद्ध, बाह्य आक्रमण या सशस्त्र विद्रोह के आधार पर राष्ट्रीय आपातकाल से संबंधित है।',
-      mr: 'कलम ३५२ हे युद्ध, परकीय आक्रमण किंवा सशस्त्र बंडखोरीच्या आधारे राष्ट्रीय आणीबाणी लागू करण्याचा अधिकार देते.'
-    }
-  },
-  {
-    id: 'q-gk-3',
-    category: 'State Exams',
-    section: 'General Knowledge / Current Affairs',
-    subject: 'Maharashtra General Knowledge',
-    topic: 'Maharashtra Geography',
-    difficulty: 'Medium',
-    marks: 2.5,
-    negativeMarks: 0.5,
-    timeLimitSec: 30,
-    questionText: {
-      en: 'Which river is known as the "Dakshin Ganga" of Maharashtra?',
-      hi: 'महाराष्ट्र की किस नदी को "दक्षिण गंगा" के नाम से जाना जाता है?',
-      mr: 'महाराष्ट्रातील कोणत्या नदीला "दक्षिण गंगा" म्हणून ओळखले जाते?'
-    },
-    options: {
-      en: ['Krishna', 'Godavari', 'Tapi', 'Bhima'],
-      hi: ['कृष्णा', 'गोदावरी', 'तापी', 'भीमा'],
-      mr: ['कृष्णा', 'गोदावरी', 'तापी', 'भीमा']
-    },
-    correctOptionIndex: 1,
-    explanation: {
-      en: 'Godavari is the longest river in Maharashtra originating at Trimbakeshwar (Nashik) and is called Dakshin Ganga.',
-      hi: 'गोदावरी महाराष्ट्र की सबसे लंबी नदी है जो नासिक से निकलती है।',
-      mr: 'गोदावरी ही महाराष्ट्रातील सर्वात मोठी नदी असून तिचा उगम त्र्यंबकेश्वर (नाशिक) येथे होतो.'
-    }
   }
 ];
 
 export const SAMPLE_MOCK_TESTS: MockTest[] = [
+  {
+    id: 'bsf-head-constable-01',
+    title: 'BSF Head Constable (Ministerial) Real Paper 2023',
+    category: 'BSF Head Constable & Defense',
+    subCategory: 'BSF Constable',
+    durationMinutes: 60,
+    totalMarks: 100,
+    questionCount: EXPANDED_QUESTION_BANK.length,
+    difficulty: 'Medium',
+    attemptsCount: 22100,
+    sections: [
+      { id: 'sec-english', name: 'English / Verbal Ability', questionCount: 3, marks: 25 },
+      { id: 'sec-quant', name: 'Quantitative Aptitude', questionCount: 2, marks: 25 },
+      { id: 'sec-reasoning', name: 'Reasoning', questionCount: 2, marks: 25 },
+      { id: 'sec-gk', name: 'General Knowledge / Current Affairs', questionCount: 1, marks: 25 }
+    ],
+    questions: EXPANDED_QUESTION_BANK
+  },
   {
     id: 'cgl-full-01',
     title: 'SSC CGL Proctored Full Mock Test 2026 #01',
@@ -378,10 +350,10 @@ export const SAMPLE_MOCK_TESTS: MockTest[] = [
     difficulty: 'Medium',
     attemptsCount: 18450,
     sections: [
-      { id: 'sec-quant', name: 'Quantitative Aptitude', questionCount: 3, marks: 50 },
-      { id: 'sec-reasoning', name: 'Reasoning', questionCount: 3, marks: 50 },
-      { id: 'sec-english', name: 'English / Verbal Ability', questionCount: 2, marks: 50 },
-      { id: 'sec-gk', name: 'General Knowledge / Current Affairs', questionCount: 3, marks: 50 }
+      { id: 'sec-quant', name: 'Quantitative Aptitude', questionCount: 2, marks: 50 },
+      { id: 'sec-reasoning', name: 'Reasoning', questionCount: 2, marks: 50 },
+      { id: 'sec-english', name: 'English / Verbal Ability', questionCount: 3, marks: 50 },
+      { id: 'sec-gk', name: 'General Knowledge / Current Affairs', questionCount: 1, marks: 50 }
     ],
     questions: EXPANDED_QUESTION_BANK
   }
