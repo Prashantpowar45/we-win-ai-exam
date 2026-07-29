@@ -40,6 +40,26 @@ export interface Question {
   marks: number;
   negativeMarks: number;
   timeLimitSec: number;
+  isAiGenerated?: boolean;
+  source?: string;
+  createdAt?: string;
+}
+
+export interface CurrentAffairsItem {
+  id: string;
+  title: {
+    en: string;
+    hi: string;
+    mr: string;
+  };
+  category: 'ISRO & Space' | 'Economy & Budget' | 'Defense' | 'Maharashtra GK' | 'National & International';
+  date: string;
+  summary: {
+    en: string;
+    hi: string;
+    mr: string;
+  };
+  relatedQuestion: Question;
 }
 
 export interface SectionInfo {

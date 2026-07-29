@@ -3,7 +3,7 @@
 
 import React, { useState } from 'react';
 import { Language, UserProfile } from '@/lib/types';
-import { Trophy, Flame, Zap, Globe, User, ShieldCheck, Bot, Menu, X, Settings, LogOut, LogIn } from 'lucide-react';
+import { Trophy, Flame, Zap, Globe, User, ShieldCheck, Bot, Menu, X, Settings, LogOut, LogIn, Sparkles } from 'lucide-react';
 
 interface NavbarProps {
   user: UserProfile | null;
@@ -12,6 +12,7 @@ interface NavbarProps {
   onOpenAuth: () => void;
   onLogout: () => void;
   onOpenAiTutor: () => void;
+  onOpenAiGenerator: () => void;
   onOpenAdmin: () => void;
   onOpenGamification: () => void;
   onNavigate: (section: string) => void;
@@ -24,6 +25,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   onOpenAuth,
   onLogout,
   onOpenAiTutor,
+  onOpenAiGenerator,
   onOpenAdmin,
   onOpenGamification,
   onNavigate,
@@ -67,6 +69,9 @@ export const Navbar: React.FC<NavbarProps> = ({
             <button onClick={() => onNavigate('categories')} className="px-3.5 py-1.5 text-xs font-semibold text-slate-300 hover:text-white hover:bg-slate-800 rounded-full transition-colors">
               Exams & Categories
             </button>
+            <button onClick={() => onNavigate('current-affairs')} className="px-3.5 py-1.5 text-xs font-semibold text-slate-300 hover:text-white hover:bg-slate-800 rounded-full transition-colors">
+              Current Affairs (2020-2026)
+            </button>
             <button onClick={() => onNavigate('leaderboard')} className="px-3.5 py-1.5 text-xs font-semibold text-slate-300 hover:text-white hover:bg-slate-800 rounded-full transition-colors">
               Leaderboard
             </button>
@@ -75,6 +80,15 @@ export const Navbar: React.FC<NavbarProps> = ({
           {/* User & Action Controls */}
           <div className="hidden sm:flex items-center gap-3">
             
+            {/* AI Infinite Practice Generator */}
+            <button
+              onClick={onOpenAiGenerator}
+              className="px-3 py-1.5 rounded-xl bg-indigo-950 border border-indigo-500/30 text-indigo-200 font-bold text-xs hover:bg-indigo-900 transition-colors flex items-center gap-1.5"
+            >
+              <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
+              <span>AI Quiz Gen</span>
+            </button>
+
             {/* Gamification Pills */}
             <button
               onClick={onOpenGamification}
@@ -200,6 +214,12 @@ export const Navbar: React.FC<NavbarProps> = ({
             </button>
             <button onClick={() => { setMobileMenuOpen(false); onNavigate('categories'); }} className="text-left px-3 py-2 rounded-lg text-sm font-semibold text-slate-200 hover:bg-slate-900">
               Exams & Categories
+            </button>
+            <button onClick={() => { setMobileMenuOpen(false); onNavigate('current-affairs'); }} className="text-left px-3 py-2 rounded-lg text-sm font-semibold text-slate-200 hover:bg-slate-900">
+              Current Affairs (2020-2026)
+            </button>
+            <button onClick={() => { setMobileMenuOpen(false); onOpenAiGenerator(); }} className="text-left px-3 py-2 rounded-lg text-sm font-semibold text-indigo-300 hover:bg-slate-900">
+              AI Infinite Quiz Generator
             </button>
             <button onClick={() => { setMobileMenuOpen(false); onNavigate('leaderboard'); }} className="text-left px-3 py-2 rounded-lg text-sm font-semibold text-slate-200 hover:bg-slate-900">
               Leaderboard

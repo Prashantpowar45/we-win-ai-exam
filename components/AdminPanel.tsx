@@ -3,7 +3,7 @@
 
 import React, { useState } from 'react';
 import { SAMPLE_MOCK_TESTS } from '@/lib/mockExamData';
-import { Settings, Plus, Upload, Trash2, Edit3, Database, Users, CheckCircle2, X } from 'lucide-react';
+import { Settings, Plus, Upload, Trash2, Edit3, Database, Users, CheckCircle2, X, Sparkles, Bot } from 'lucide-react';
 
 interface AdminPanelProps {
   isOpen: boolean;
@@ -11,14 +11,36 @@ interface AdminPanelProps {
 }
 
 export const AdminPanel: React.FC<AdminPanelProps> = ({ isOpen, onClose }) => {
-  const [activeTab, setActiveTab] = useState<'questions' | 'create-test' | 'csv'>('questions');
+  const [activeTab, setActiveTab] = useState<'questions' | 'create-test' | 'csv' | 'ai-gen'>('questions');
   const [questionsList, setQuestionsList] = useState(SAMPLE_MOCK_TESTS[0].questions);
   const [successNotice, setSuccessNotice] = useState<string | null>(null);
+  const [aiLoading, setAiLoading] = useState(false);
 
   if (!isOpen) return null;
 
   const handleDeleteQ = (id: string) => {
     setQuestionsList(questionsList.filter(q => q.id !== id));
+  };
+
+  const handleTriggerAiGen = async () => {
+    setAiLoading(true);
+    try {
+      const res = await fetch('/api/generate-questions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ subject: 'General Knowledge / Current Affairs', topic: 'Union Budget & ISRO', count: 3 })
+      });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        setQuestionsList((prev) => [...data.questions, ...prev]);
+        setSuccessNotice('AI Engine generated 3 new verified MCQs into Database!');
+        setTimeout(() => setSuccessNotice(null), 4000);
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setAiLoading(false);
+    }
   };
 
   const handleSimulateCsv = () => {
@@ -36,14 +58,25 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ isOpen, onClose }) => {
         </button>
 
         {/* Header */}
-        <div className="flex items-center gap-3 border-b border-slate-800 pb-4">
-          <div className="w-10 h-10 rounded-xl bg-win-600 text-white flex items-center justify-center">
-            <Settings className="w-5 h-5" />
+        <div className="flex items-center justify-between border-b border-slate-800 pb-4">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-win-600 text-white flex items-center justify-center">
+              <Settings className="w-5 h-5" />
+            </div>
+            <div>
+              <h3 className="text-xl font-black text-white">We_Win23 Admin Console</h3>
+              <p className="text-xs text-slate-400">Manage question banks, AI generators, and bulk question imports</p>
+            </div>
           </div>
-          <div>
-            <h3 className="text-xl font-black text-white">We Win Admin Console</h3>
-            <p className="text-xs text-slate-400">Manage question banks, build mock tests, and upload bulk questions</p>
-          </div>
+
+          <button
+            onClick={handleTriggerAiGen}
+            disabled={aiLoading}
+            className="px-3.5 py-2 rounded-xl bg-gradient-to-r from-indigo-600 to-win-600 text-white font-bold text-xs shadow-lg flex items-center gap-1.5 disabled:opacity-50"
+          >
+            <Bot className="w-4 h-4 text-indigo-300 animate-spin" />
+            <span>{aiLoading ? 'Generating...' : '1-Click AI Generate Questions'}</span>
+          </button>
         </div>
 
         {/* Success Alert */}
@@ -97,7 +130,9 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ isOpen, onClose }) => {
               {questionsList.map((q, idx) => (
                 <div key={q.id} className="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-2 text-xs">
                   <div className="flex items-center justify-between">
-                    <span className="font-bold text-win-400">Q{idx + 1}. {q.category} • {q.subject}</span>
+                    <span className="font-bold text-win-400">
+                      Q{idx + 1}. {q.category} • {q.subject} {q.isAiGenerated && <span className="text-[9px] px-1.5 py-0.5 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">AI GENERATED</span>}
+                    </span>
                     <div className="flex items-center gap-2">
                       <button onClick={() => handleDeleteQ(q.id)} className="p-1 text-rose-400 hover:text-rose-300">
                         <Trash2 className="w-4 h-4" />

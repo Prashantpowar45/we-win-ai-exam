@@ -15,11 +15,13 @@ import { Leaderboard } from '@/components/Leaderboard';
 import { GamificationModal } from '@/components/GamificationModal';
 import { AdminPanel } from '@/components/AdminPanel';
 import { AuthModal } from '@/components/AuthModal';
+import { CurrentAffairsHub } from '@/components/CurrentAffairsHub';
+import { AiQuestionGeneratorModal } from '@/components/AiQuestionGeneratorModal';
 import { Footer } from '@/components/Footer';
 
 export default function Home() {
   const [language, setLanguage] = useState<Language>('en');
-  const [activeSection, setActiveSection] = useState<'home' | 'categories' | 'leaderboard'>('home');
+  const [activeSection, setActiveSection] = useState<'home' | 'categories' | 'current-affairs' | 'leaderboard'>('home');
   
   // User Auth State
   const [user, setUser] = useState<UserProfile | null>({
@@ -45,11 +47,11 @@ export default function Home() {
   } | null>(null);
 
   const [aiTutorOpen, setAiTutorOpen] = useState(false);
+  const [aiGeneratorOpen, setAiGeneratorOpen] = useState(false);
   const [adminOpen, setAdminOpen] = useState(false);
   const [gamificationOpen, setGamificationOpen] = useState(false);
 
   const handleStartTest = (testId?: string) => {
-    // If not logged in, prompt Auth Modal first
     if (!user) {
       setAuthOpen(true);
       return;
@@ -90,6 +92,7 @@ export default function Home() {
         onOpenAuth={() => setAuthOpen(true)}
         onLogout={() => setUser(null)}
         onOpenAiTutor={() => setAiTutorOpen(true)}
+        onOpenAiGenerator={() => setAiGeneratorOpen(true)}
         onOpenAdmin={() => setAdminOpen(true)}
         onOpenGamification={() => setGamificationOpen(true)}
         onNavigate={(sec) => setActiveSection(sec as any)}
@@ -111,6 +114,11 @@ export default function Home() {
             onOpenGamification={() => setGamificationOpen(true)}
           />
 
+          <CurrentAffairsHub
+            language={language}
+            onStartTest={handleStartTest}
+          />
+
           <ExamCategories
             language={language}
             onStartTest={handleStartTest}
@@ -123,6 +131,15 @@ export default function Home() {
       {activeSection === 'categories' && (
         <div className="pt-6">
           <ExamCategories
+            language={language}
+            onStartTest={handleStartTest}
+          />
+        </div>
+      )}
+
+      {activeSection === 'current-affairs' && (
+        <div className="pt-6">
+          <CurrentAffairsHub
             language={language}
             onStartTest={handleStartTest}
           />
@@ -146,6 +163,12 @@ export default function Home() {
           setUser(loggedUser);
           setAuthOpen(false);
         }}
+      />
+
+      <AiQuestionGeneratorModal
+        isOpen={aiGeneratorOpen}
+        onClose={() => setAiGeneratorOpen(false)}
+        language={language}
       />
 
       {completedTestResult && (
