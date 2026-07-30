@@ -49,13 +49,19 @@ export const ExamInterface: React.FC<ExamInterfaceProps> = ({
     return initial;
   });
 
-  // 1. Request Webcam Permission
+  // 1. Request Webcam Permission & Attach Face Feed properly
   const requestWebcam = async () => {
     setCameraError(null);
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ video: { width: 320, height: 240 } });
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: { width: { ideal: 640 }, height: { ideal: 480 }, facingMode: 'user' },
+        audio: false
+      });
       if (videoRef.current) {
         videoRef.current.srcObject = stream;
+        videoRef.current.onloadedmetadata = () => {
+          videoRef.current?.play().catch(e => console.error('Video play error:', e));
+        };
       }
       setCameraGranted(true);
     } catch (err) {
@@ -69,13 +75,19 @@ export const ExamInterface: React.FC<ExamInterfaceProps> = ({
   useEffect(() => {
     requestWebcam();
     return () => {
-      // Cleanup camera stream
       if (videoRef.current && videoRef.current.srcObject) {
         const stream = videoRef.current.srcObject as MediaStream;
         stream.getTracks().forEach(track => track.stop());
       }
     };
   }, []);
+
+  // Ensure video element plays when cameraGranted flips to true
+  useEffect(() => {
+    if (cameraGranted && videoRef.current && videoRef.current.srcObject) {
+      videoRef.current.play().catch(e => console.error('Video autoplay error:', e));
+    }
+  }, [cameraGranted]);
 
   // 2. Anti-Cheat Anti-Tab Switch & Fullscreen Monitors
   useEffect(() => {
@@ -85,7 +97,6 @@ export const ExamInterface: React.FC<ExamInterfaceProps> = ({
       setWarningCount((prev) => {
         const next = prev + 1;
         if (next >= 3) {
-          // Auto submit after 3 warnings
           onSubmitTest(userAnswers, (test.durationMinutes * 60) - timeLeftSec);
           return next;
         }
@@ -272,11 +283,17 @@ export const ExamInterface: React.FC<ExamInterfaceProps> = ({
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col select-none relative">
       
-      {/* Floating Camera Preview Window */}
-      <div className="fixed bottom-4 right-4 z-50 w-44 h-32 rounded-2xl bg-slate-900 border-2 border-win-500/60 shadow-2xl overflow-hidden flex flex-col justify-between">
-        <video ref={videoRef} autoPlay playsInline muted className="w-full h-full object-cover" />
-        <div className="absolute top-2 left-2 px-2 py-0.5 rounded bg-slate-950/80 text-[9px] font-mono text-emerald-400 flex items-center gap-1 border border-emerald-500/30">
-          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
+      {/* Floating Camera Preview Window with Realtime Face Display */}
+      <div className="fixed bottom-4 right-4 z-50 w-48 h-36 rounded-2xl bg-slate-900 border-2 border-win-500/80 shadow-2xl overflow-hidden flex flex-col justify-between group">
+        <video
+          ref={videoRef}
+          autoPlay
+          playsInline
+          muted
+          className="w-full h-full object-cover transform -scale-x-100 bg-slate-950"
+        />
+        <div className="absolute top-2 left-2 px-2 py-0.5 rounded bg-slate-950/90 text-[9px] font-mono text-emerald-400 flex items-center gap-1 border border-emerald-500/40 shadow">
+          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
           <span>PROCTORED LIVE</span>
         </div>
       </div>

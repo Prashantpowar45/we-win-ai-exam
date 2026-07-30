@@ -16,13 +16,14 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   onClose,
   onLoginSuccess
 }) => {
-  const [tab, setTab] = useState<'login' | 'register'>('login');
+  const [tab, setTab] = useState<'login' | 'register'>('register');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
   const [targetExam, setTargetExam] = useState('SSC CGL 2026');
   const [state, setState] = useState('Maharashtra');
-  const [college, setCollege] = useState('Shivaji University');
+  const [college, setCollege] = useState('University');
+  const [loading, setLoading] = useState(false);
 
   if (!isOpen) return null;
 
@@ -40,25 +41,60 @@ export const AuthModal: React.FC<AuthModalProps> = ({
       averageScore: 182.5,
       accuracy: 94.2
     };
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('we_win23_user', JSON.stringify(demoUser));
+    }
     onLoginSuccess(demoUser);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const newUser: UserProfile = {
-      id: `usr-${Date.now()}`,
-      name: name || 'Aspirant Student',
-      email: email || 'student@wewin23.com',
-      targetExam,
-      state,
-      college,
-      xp: 1500,
-      streakDays: 1,
-      testsCompleted: 1,
-      averageScore: 175.0,
-      accuracy: 90.0
-    };
-    onLoginSuccess(newUser);
+    setLoading(true);
+
+    try {
+      const res = await fetch('/api/auth', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: tab,
+          name: name || email.split('@')[0],
+          email,
+          targetExam,
+          state,
+          college
+        })
+      });
+
+      const data = await res.json();
+      if (data.success && data.user) {
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('we_win23_user', JSON.stringify(data.user));
+        }
+        onLoginSuccess(data.user);
+      }
+    } catch (err) {
+      console.error('Auth submit error:', err);
+      // Local fallback
+      const fallbackUser: UserProfile = {
+        id: `usr-${Date.now()}`,
+        name: name || 'Aspirant Student',
+        email: email || 'student@wewin23.com',
+        targetExam,
+        state,
+        college,
+        xp: 1000,
+        streakDays: 1,
+        testsCompleted: 0,
+        averageScore: 0,
+        accuracy: 0
+      };
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('we_win23_user', JSON.stringify(fallbackUser));
+      }
+      onLoginSuccess(fallbackUser);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -76,36 +112,36 @@ export const AuthModal: React.FC<AuthModalProps> = ({
             W
           </div>
           <h3 className="text-2xl font-black text-white">We_Win23 Account Access</h3>
-          <p className="text-xs text-slate-400">Sign in to access AI Proctored Exams, analytics, and national ranks</p>
+          <p className="text-xs text-slate-400">Create your independent candidate profile to access AI Proctored Exams</p>
         </div>
 
         {/* Demo 1-Click Login Button */}
         <div className="p-3.5 rounded-2xl bg-gradient-to-r from-win-950 to-slate-950 border border-win-500/30 text-center space-y-2">
           <div className="text-xs font-bold text-win-300 flex items-center justify-center gap-1.5">
             <Sparkles className="w-4 h-4 text-win-400" />
-            <span>Quick 1-Click Evaluation Login</span>
+            <span>Evaluation Quick Login</span>
           </div>
           <button
             onClick={handleDemoLogin}
             className="w-full py-2.5 px-4 rounded-xl bg-win-600 hover:bg-win-500 text-white font-bold text-xs shadow-lg shadow-win-500/20"
           >
-            Login as Prashant Powar (Rank #5 Candidate)
+            Demo Login as Prashant Powar
           </button>
         </div>
 
         {/* Login / Register Tabs */}
         <div className="flex items-center bg-slate-950 p-1 rounded-xl border border-slate-800 text-xs font-bold">
           <button
-            onClick={() => setTab('login')}
-            className={`flex-1 py-2 rounded-lg transition-all ${tab === 'login' ? 'bg-win-600 text-white' : 'text-slate-400'}`}
-          >
-            Log In
-          </button>
-          <button
             onClick={() => setTab('register')}
             className={`flex-1 py-2 rounded-lg transition-all ${tab === 'register' ? 'bg-win-600 text-white' : 'text-slate-400'}`}
           >
             Register Account
+          </button>
+          <button
+            onClick={() => setTab('login')}
+            className={`flex-1 py-2 rounded-lg transition-all ${tab === 'login' ? 'bg-win-600 text-white' : 'text-slate-400'}`}
+          >
+            Log In
           </button>
         </div>
 
@@ -114,13 +150,13 @@ export const AuthModal: React.FC<AuthModalProps> = ({
           
           {tab === 'register' && (
             <div className="space-y-1.5">
-              <label className="block font-bold text-slate-300">Full Name *</label>
+              <label className="block font-bold text-slate-300">Your Full Name *</label>
               <div className="relative">
                 <User className="w-4 h-4 text-slate-500 absolute left-3 top-3" />
                 <input
                   type="text"
                   required
-                  placeholder="e.g. Prashant Powar"
+                  placeholder="e.g. Aarav Deshmukh"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   className="w-full pl-9 pr-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white placeholder:text-slate-500 focus:outline-none focus:border-win-500"
@@ -130,13 +166,13 @@ export const AuthModal: React.FC<AuthModalProps> = ({
           )}
 
           <div className="space-y-1.5">
-            <label className="block font-bold text-slate-300">Email Address *</label>
+            <label className="block font-bold text-slate-300">Your Email Address *</label>
             <div className="relative">
               <Mail className="w-4 h-4 text-slate-500 absolute left-3 top-3" />
               <input
                 type="email"
                 required
-                placeholder="aspirant@gmail.com"
+                placeholder="candidate@gmail.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="w-full pl-9 pr-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white placeholder:text-slate-500 focus:outline-none focus:border-win-500"
@@ -173,6 +209,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                   <option value="RRB NTPC & Group D">RRB NTPC & Group D</option>
                   <option value="MPSC Rajyaseva">MPSC Rajyaseva</option>
                   <option value="Police Bharti Maharashtra">Police Bharti Maharashtra</option>
+                  <option value="BSF & Defense Exams">BSF & Defense Exams</option>
                   <option value="UPSC Prelims & CSAT">UPSC Prelims & CSAT</option>
                 </select>
               </div>
@@ -202,9 +239,10 @@ export const AuthModal: React.FC<AuthModalProps> = ({
 
           <button
             type="submit"
-            className="w-full py-3 px-6 rounded-xl bg-gradient-to-r from-win-600 to-indigo-600 text-white font-bold text-xs shadow-xl shadow-win-500/20 hover:scale-[1.01] transition-all"
+            disabled={loading}
+            className="w-full py-3 px-6 rounded-xl bg-gradient-to-r from-win-600 to-indigo-600 text-white font-bold text-xs shadow-xl shadow-win-500/20 hover:scale-[1.01] transition-all disabled:opacity-50"
           >
-            {tab === 'login' ? 'Log In to Account' : 'Create We_Win23 Profile'}
+            {loading ? 'Connecting to Database...' : tab === 'login' ? 'Log In to Your Account' : 'Create My Independent Profile'}
           </button>
         </form>
 

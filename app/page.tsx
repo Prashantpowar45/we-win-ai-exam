@@ -1,7 +1,7 @@
 'use me';
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Language, MockTest, UserAnswer, UserProfile } from '@/lib/types';
 import { SAMPLE_MOCK_TESTS } from '@/lib/mockExamData';
 import { Navbar } from '@/components/Navbar';
@@ -23,20 +23,19 @@ export default function Home() {
   const [language, setLanguage] = useState<Language>('en');
   const [activeSection, setActiveSection] = useState<'home' | 'categories' | 'current-affairs' | 'leaderboard'>('home');
   
-  // User Auth State
-  const [user, setUser] = useState<UserProfile | null>({
-    id: 'usr-prashant',
-    name: 'Prashant Powar',
-    email: 'prashant.powar@wewin23.com',
-    targetExam: 'SSC CGL & MPSC Rajyaseva',
-    state: 'Maharashtra',
-    college: 'Shivaji University',
-    xp: 3800,
-    streakDays: 7,
-    testsCompleted: 24,
-    averageScore: 182.5,
-    accuracy: 94.2
-  });
+  // Independent Per-Device User Auth State
+  const [user, setUser] = useState<UserProfile | null>(null);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const stored = localStorage.getItem('we_win23_user');
+      if (stored) {
+        try {
+          setUser(JSON.parse(stored));
+        } catch (e) {}
+      }
+    }
+  }, []);
 
   const [authOpen, setAuthOpen] = useState(false);
   const [activeTest, setActiveTest] = useState<MockTest | null>(null);
@@ -58,6 +57,13 @@ export default function Home() {
     }
     const targetTest = SAMPLE_MOCK_TESTS.find(t => t.id === testId) || SAMPLE_MOCK_TESTS[0];
     setActiveTest(targetTest);
+  };
+
+  const handleLogout = () => {
+    setUser(null);
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('we_win23_user');
+    }
   };
 
   const handleSubmitTest = (userAnswers: Record<string, UserAnswer>, totalTimeSpentSec: number) => {
@@ -90,7 +96,7 @@ export default function Home() {
         language={language}
         onLanguageChange={setLanguage}
         onOpenAuth={() => setAuthOpen(true)}
-        onLogout={() => setUser(null)}
+        onLogout={handleLogout}
         onOpenAiTutor={() => setAiTutorOpen(true)}
         onOpenAiGenerator={() => setAiGeneratorOpen(true)}
         onOpenAdmin={() => setAdminOpen(true)}
