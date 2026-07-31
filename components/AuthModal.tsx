@@ -3,7 +3,7 @@
 
 import React, { useState } from 'react';
 import { UserProfile } from '@/lib/types';
-import { User, Lock, Mail, GraduationCap, MapPin, Target, Sparkles, CheckCircle2, X } from 'lucide-react';
+import { User, Lock, Mail, Phone, KeyRound, Sparkles, X, ShieldCheck } from 'lucide-react';
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -16,9 +16,12 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   onClose,
   onLoginSuccess
 }) => {
-  const [tab, setTab] = useState<'login' | 'register'>('register');
+  const [tab, setTab] = useState<'register' | 'login' | 'phone'>('register');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [phone, setPhone] = useState('');
+  const [otp, setOtp] = useState('');
+  const [otpSent, setOtpSent] = useState(false);
   const [name, setName] = useState('');
   const [targetExam, setTargetExam] = useState('SSC CGL 2026');
   const [state, setState] = useState('Maharashtra');
@@ -47,6 +50,11 @@ export const AuthModal: React.FC<AuthModalProps> = ({
     onLoginSuccess(demoUser);
   };
 
+  const handleSendOtp = () => {
+    if (!phone || phone.length < 10) return;
+    setOtpSent(true);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -57,8 +65,9 @@ export const AuthModal: React.FC<AuthModalProps> = ({
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           action: tab,
-          name: name || email.split('@')[0],
-          email,
+          name: name || (phone ? `Student ${phone.slice(-4)}` : email.split('@')[0]),
+          email: email || `${phone}@wewin23.com`,
+          phone,
           targetExam,
           state,
           college
@@ -74,11 +83,10 @@ export const AuthModal: React.FC<AuthModalProps> = ({
       }
     } catch (err) {
       console.error('Auth submit error:', err);
-      // Local fallback
       const fallbackUser: UserProfile = {
         id: `usr-${Date.now()}`,
-        name: name || 'Aspirant Student',
-        email: email || 'student@wewin23.com',
+        name: name || 'Candidate Student',
+        email: email || `${phone}@wewin23.com`,
         targetExam,
         state,
         college,
@@ -129,71 +137,124 @@ export const AuthModal: React.FC<AuthModalProps> = ({
           </button>
         </div>
 
-        {/* Login / Register Tabs */}
+        {/* Auth Tabs */}
         <div className="flex items-center bg-slate-950 p-1 rounded-xl border border-slate-800 text-xs font-bold">
           <button
             onClick={() => setTab('register')}
             className={`flex-1 py-2 rounded-lg transition-all ${tab === 'register' ? 'bg-win-600 text-white' : 'text-slate-400'}`}
           >
-            Register Account
+            Email Signup
           </button>
           <button
             onClick={() => setTab('login')}
             className={`flex-1 py-2 rounded-lg transition-all ${tab === 'login' ? 'bg-win-600 text-white' : 'text-slate-400'}`}
           >
-            Log In
+            Email Login
+          </button>
+          <button
+            onClick={() => setTab('phone')}
+            className={`flex-1 py-2 rounded-lg transition-all ${tab === 'phone' ? 'bg-win-600 text-white' : 'text-slate-400'}`}
+          >
+            Phone & OTP
           </button>
         </div>
 
         {/* Form Elements */}
         <form onSubmit={handleSubmit} className="space-y-4 text-xs">
           
-          {tab === 'register' && (
-            <div className="space-y-1.5">
-              <label className="block font-bold text-slate-300">Your Full Name *</label>
-              <div className="relative">
-                <User className="w-4 h-4 text-slate-500 absolute left-3 top-3" />
-                <input
-                  type="text"
-                  required
-                  placeholder="e.g. Aarav Deshmukh"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  className="w-full pl-9 pr-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white placeholder:text-slate-500 focus:outline-none focus:border-win-500"
-                />
+          {tab === 'phone' ? (
+            <>
+              <div className="space-y-1.5">
+                <label className="block font-bold text-slate-300">Mobile Phone Number *</label>
+                <div className="relative">
+                  <Phone className="w-4 h-4 text-slate-500 absolute left-3 top-3" />
+                  <input
+                    type="tel"
+                    required
+                    placeholder="+91 9876543210"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    className="w-full pl-9 pr-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white placeholder:text-slate-500 focus:outline-none focus:border-win-500"
+                  />
+                </div>
               </div>
-            </div>
+
+              {!otpSent ? (
+                <button
+                  type="button"
+                  onClick={handleSendOtp}
+                  className="w-full py-2.5 rounded-xl bg-slate-800 text-win-400 font-bold hover:bg-slate-700 border border-slate-700"
+                >
+                  Get 6-Digit OTP SMS
+                </button>
+              ) : (
+                <div className="space-y-1.5 animate-in fade-in duration-150">
+                  <label className="block font-bold text-emerald-400">Enter OTP Code (Sent to {phone}) *</label>
+                  <div className="relative">
+                    <KeyRound className="w-4 h-4 text-emerald-400 absolute left-3 top-3" />
+                    <input
+                      type="text"
+                      maxLength={6}
+                      required
+                      placeholder="1 2 3 4 5 6"
+                      value={otp}
+                      onChange={(e) => setOtp(e.target.value)}
+                      className="w-full pl-9 pr-3 py-2.5 rounded-xl bg-slate-950 border border-emerald-500/50 text-white font-mono tracking-widest text-sm focus:outline-none"
+                    />
+                  </div>
+                </div>
+              )}
+            </>
+          ) : (
+            <>
+              {tab === 'register' && (
+                <div className="space-y-1.5">
+                  <label className="block font-bold text-slate-300">Full Name *</label>
+                  <div className="relative">
+                    <User className="w-4 h-4 text-slate-500 absolute left-3 top-3" />
+                    <input
+                      type="text"
+                      required
+                      placeholder="e.g. Aarav Deshmukh"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      className="w-full pl-9 pr-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white placeholder:text-slate-500 focus:outline-none focus:border-win-500"
+                    />
+                  </div>
+                </div>
+              )}
+
+              <div className="space-y-1.5">
+                <label className="block font-bold text-slate-300">Email Address *</label>
+                <div className="relative">
+                  <Mail className="w-4 h-4 text-slate-500 absolute left-3 top-3" />
+                  <input
+                    type="email"
+                    required
+                    placeholder="candidate@gmail.com"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="w-full pl-9 pr-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white placeholder:text-slate-500 focus:outline-none focus:border-win-500"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="block font-bold text-slate-300">Password *</label>
+                <div className="relative">
+                  <Lock className="w-4 h-4 text-slate-500 absolute left-3 top-3" />
+                  <input
+                    type="password"
+                    required
+                    placeholder="••••••••"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="w-full pl-9 pr-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white placeholder:text-slate-500 focus:outline-none focus:border-win-500"
+                  />
+                </div>
+              </div>
+            </>
           )}
-
-          <div className="space-y-1.5">
-            <label className="block font-bold text-slate-300">Your Email Address *</label>
-            <div className="relative">
-              <Mail className="w-4 h-4 text-slate-500 absolute left-3 top-3" />
-              <input
-                type="email"
-                required
-                placeholder="candidate@gmail.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full pl-9 pr-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white placeholder:text-slate-500 focus:outline-none focus:border-win-500"
-              />
-            </div>
-          </div>
-
-          <div className="space-y-1.5">
-            <label className="block font-bold text-slate-300">Password *</label>
-            <div className="relative">
-              <Lock className="w-4 h-4 text-slate-500 absolute left-3 top-3" />
-              <input
-                type="password"
-                required
-                placeholder="••••••••"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full pl-9 pr-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white placeholder:text-slate-500 focus:outline-none focus:border-win-500"
-              />
-            </div>
-          </div>
 
           {tab === 'register' && (
             <>
@@ -242,7 +303,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
             disabled={loading}
             className="w-full py-3 px-6 rounded-xl bg-gradient-to-r from-win-600 to-indigo-600 text-white font-bold text-xs shadow-xl shadow-win-500/20 hover:scale-[1.01] transition-all disabled:opacity-50"
           >
-            {loading ? 'Connecting to Database...' : tab === 'login' ? 'Log In to Your Account' : 'Create My Independent Profile'}
+            {loading ? 'Connecting to Database...' : tab === 'phone' ? 'Verify OTP & Access Exams' : tab === 'login' ? 'Log In to Your Account' : 'Create My Independent Profile'}
           </button>
         </form>
 

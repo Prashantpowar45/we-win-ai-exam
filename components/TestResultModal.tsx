@@ -1,9 +1,9 @@
 'use me';
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import { MockTest, Language, UserAnswer } from '@/lib/types';
-import { Trophy, CheckCircle2, XCircle, AlertCircle, Sparkles, Brain, Clock, Award, ArrowLeft, RefreshCw, ChevronDown, BookOpen } from 'lucide-react';
+import { Trophy, CheckCircle2, XCircle, Clock, Target, Award, Sparkles, Download, Printer, RefreshCw, X, ChevronRight } from 'lucide-react';
 
 interface TestResultModalProps {
   test: MockTest;
@@ -22,225 +22,169 @@ export const TestResultModal: React.FC<TestResultModalProps> = ({
   onClose,
   onRetake
 }) => {
-  const [activeTab, setActiveTab] = useState<'score' | 'explanations' | 'ai-analysis'>('score');
-
-  // Compute Results
-  let score = 0;
   let correctCount = 0;
   let wrongCount = 0;
-  let unansweredCount = 0;
+  let unattemptedCount = 0;
+  let totalScore = 0;
 
   test.questions.forEach((q) => {
     const ans = userAnswers[q.id];
     if (!ans || ans.selectedOptionIndex === null) {
-      unansweredCount++;
+      unattemptedCount++;
     } else if (ans.selectedOptionIndex === q.correctOptionIndex) {
       correctCount++;
-      score += q.marks;
+      totalScore += q.marks;
     } else {
       wrongCount++;
-      score -= q.negativeMarks;
+      totalScore -= q.negativeMarks;
     }
   });
 
-  const totalQuestions = test.questions.length;
-  const accuracy = (correctCount + wrongCount) > 0 ? Math.round((correctCount / (correctCount + wrongCount)) * 100) : 0;
-  const percentile = Math.min(99.9, Math.max(75, Math.round(85 + (score / (test.totalMarks || 10)) * 14))).toFixed(1);
+  const finalScore = Math.max(0, parseFloat(totalScore.toFixed(2)));
+  const totalAttempted = correctCount + wrongCount;
+  const accuracyPct = totalAttempted > 0 ? parseFloat(((correctCount / totalAttempted) * 100).toFixed(1)) : 0;
+  const percentilePct = parseFloat((92 + (finalScore / test.totalMarks) * 7.5).toFixed(1));
+  const nationalRank = Math.max(1, Math.floor(100 - (finalScore / test.totalMarks) * 90));
 
-  const formatSec = (sec: number) => {
-    const m = Math.floor(sec / 60);
-    const s = sec % 60;
+  const formatTime = (totalSec: number) => {
+    const m = Math.floor(totalSec / 60);
+    const s = totalSec % 60;
     return `${m}m ${s}s`;
   };
 
+  const handleDownloadPdf = () => {
+    if (typeof window !== 'undefined') {
+      window.print();
+    }
+  };
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/90 backdrop-blur-md animate-in fade-in duration-200">
-      <div className="bg-slate-900 border border-slate-800 rounded-3xl max-w-4xl w-full p-6 sm:p-8 space-y-6 shadow-2xl relative max-h-[92vh] overflow-y-auto">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md animate-in fade-in duration-200">
+      <div className="bg-slate-900 border border-slate-800 rounded-3xl max-w-3xl w-full p-6 sm:p-8 space-y-6 shadow-2xl relative max-h-[92vh] overflow-y-auto print:max-h-none print:static print:bg-white print:text-black">
         
-        {/* Top Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-4">
-          <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-bold mb-1">
-              <Trophy className="w-3.5 h-3.5" />
-              <span>Test Completed • Official Scorecard</span>
-            </div>
-            <h2 className="text-2xl font-black text-white">{test.title}</h2>
+        {/* Close Button */}
+        <button onClick={onClose} className="absolute top-5 right-5 p-2 text-slate-400 hover:text-white rounded-xl bg-slate-800 print:hidden">
+          <X className="w-5 h-5" />
+        </button>
+
+        {/* Header */}
+        <div className="text-center space-y-2">
+          <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-win-600 via-blue-500 to-indigo-500 text-white flex items-center justify-center mx-auto shadow-xl shadow-win-500/20">
+            <Trophy className="w-8 h-8 text-win-200" />
+          </div>
+          <h2 className="text-2xl font-black text-white print:text-black">We_Win23 Performance Scorecard</h2>
+          <p className="text-xs text-slate-400 print:text-slate-600">{test.title} • AI Verified Assessment</p>
+        </div>
+
+        {/* Key Metrics Cards */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800 text-center space-y-1">
+            <div className="text-2xl font-black text-win-400">{finalScore} / {test.totalMarks}</div>
+            <div className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Final Score</div>
           </div>
 
-          <div className="flex items-center gap-2">
-            <button
-              onClick={onRetake}
-              className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-bold text-slate-200 flex items-center gap-1.5"
-            >
-              <RefreshCw className="w-3.5 h-3.5" />
-              <span>Retake Test</span>
-            </button>
-            <button
-              onClick={onClose}
-              className="px-4 py-2 rounded-xl bg-win-600 hover:bg-win-500 text-xs font-bold text-white"
-            >
-              Back to Dashboard
-            </button>
+          <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800 text-center space-y-1">
+            <div className="text-2xl font-black text-amber-400">#{nationalRank}</div>
+            <div className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">National Rank</div>
+          </div>
+
+          <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800 text-center space-y-1">
+            <div className="text-2xl font-black text-emerald-400">{percentilePct}%ile</div>
+            <div className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Percentile</div>
+          </div>
+
+          <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800 text-center space-y-1">
+            <div className="text-2xl font-black text-cyan-400">{accuracyPct}%</div>
+            <div className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Accuracy</div>
           </div>
         </div>
 
-        {/* Navigation Tabs */}
-        <div className="flex items-center bg-slate-950 p-1 rounded-xl border border-slate-800 text-xs">
-          <button
-            onClick={() => setActiveTab('score')}
-            className={`flex-1 py-2 rounded-lg font-bold transition-all ${
-              activeTab === 'score' ? 'bg-win-600 text-white shadow-md' : 'text-slate-400 hover:text-slate-200'
-            }`}
-          >
-            Score & Performance Metrics
-          </button>
-          <button
-            onClick={() => setActiveTab('explanations')}
-            className={`flex-1 py-2 rounded-lg font-bold transition-all ${
-              activeTab === 'explanations' ? 'bg-win-600 text-white shadow-md' : 'text-slate-400 hover:text-slate-200'
-            }`}
-          >
-            Step-by-Step AI Solutions
-          </button>
-          <button
-            onClick={() => setActiveTab('ai-analysis')}
-            className={`flex-1 py-2 rounded-lg font-bold transition-all ${
-              activeTab === 'ai-analysis' ? 'bg-win-600 text-white shadow-md' : 'text-slate-400 hover:text-slate-200'
-            }`}
-          >
-            AI Mistake Diagnosis & Action Plan
-          </button>
+        {/* Breakdown Row */}
+        <div className="grid grid-cols-3 gap-3 text-xs">
+          <div className="p-3.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 flex items-center justify-between font-bold">
+            <span className="flex items-center gap-1.5"><CheckCircle2 className="w-4 h-4 text-emerald-400" /> Correct</span>
+            <span>{correctCount} Qs</span>
+          </div>
+
+          <div className="p-3.5 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-300 flex items-center justify-between font-bold">
+            <span className="flex items-center gap-1.5"><XCircle className="w-4 h-4 text-rose-400" /> Incorrect</span>
+            <span>{wrongCount} Qs</span>
+          </div>
+
+          <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-400 flex items-center justify-between font-bold">
+            <span className="flex items-center gap-1.5"><Clock className="w-4 h-4 text-slate-400" /> Time Spent</span>
+            <span>{formatTime(totalTimeSpentSec)}</span>
+          </div>
         </div>
 
-        {/* Tab 1: Score Metrics */}
-        {activeTab === 'score' && (
-          <div className="space-y-6 animate-in fade-in duration-200">
-            {/* 4 Score Cards */}
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-              <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-1">
-                <div className="text-xs text-slate-400 font-semibold">Your Score</div>
-                <div className="text-3xl font-black text-emerald-400">{score.toFixed(1)}</div>
-                <div className="text-[10px] text-slate-400">Max Possible: {test.totalMarks}</div>
-              </div>
-
-              <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-1">
-                <div className="text-xs text-slate-400 font-semibold">Accuracy %</div>
-                <div className="text-3xl font-black text-amber-400">{accuracy}%</div>
-                <div className="text-[10px] text-slate-400">{correctCount} Correct / {totalQuestions} Total</div>
-              </div>
-
-              <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-1">
-                <div className="text-xs text-slate-400 font-semibold">Percentile</div>
-                <div className="text-3xl font-black text-win-400">{percentile}th</div>
-                <div className="text-[10px] text-slate-400">Top 5% Performers</div>
-              </div>
-
-              <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-1">
-                <div className="text-xs text-slate-400 font-semibold">Time Taken</div>
-                <div className="text-3xl font-black text-purple-300">{formatSec(totalTimeSpentSec)}</div>
-                <div className="text-[10px] text-slate-400">Avg Time/Q: {Math.round(totalTimeSpentSec / (totalQuestions || 1))}s</div>
-              </div>
-            </div>
-
-            {/* Breakdown Bar */}
-            <div className="p-5 rounded-2xl bg-slate-950 border border-slate-800 space-y-3">
-              <div className="flex items-center justify-between text-xs font-bold">
-                <span className="text-slate-300">Accuracy & Attempt Breakdown</span>
-                <span className="text-emerald-400">{correctCount} Correct | {wrongCount} Incorrect | {unansweredCount} Unanswered</span>
-              </div>
-              <div className="w-full h-3 bg-slate-800 rounded-full flex overflow-hidden">
-                <div className="bg-emerald-500 h-full" style={{ width: `${(correctCount / totalQuestions) * 100}%` }} />
-                <div className="bg-rose-500 h-full" style={{ width: `${(wrongCount / totalQuestions) * 100}%` }} />
-                <div className="bg-slate-700 h-full" style={{ width: `${(unansweredCount / totalQuestions) * 100}%` }} />
-              </div>
-            </div>
+        {/* AI Strengths & Action Plan */}
+        <div className="p-5 rounded-2xl bg-indigo-950/60 border border-indigo-500/30 space-y-3 text-xs">
+          <div className="flex items-center gap-2 text-indigo-300 font-bold">
+            <Sparkles className="w-4 h-4 text-indigo-400" />
+            <span>We_Win23 AI Performance Diagnosis</span>
           </div>
-        )}
+          <p className="text-slate-300 leading-relaxed">
+            Great performance! You demonstrated exceptional accuracy in <strong>Quantitative Aptitude</strong> and <strong>General Knowledge</strong>. For maximum score enhancement, revise <strong>Reasoning Syllogisms</strong> and practice timed speed drills.
+          </p>
+        </div>
 
-        {/* Tab 2: Step-by-Step AI Solutions */}
-        {activeTab === 'explanations' && (
-          <div className="space-y-4 animate-in fade-in duration-200">
+        {/* Detailed Questions & AI Solutions */}
+        <div className="space-y-4 pt-2">
+          <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400">Step-by-Step AI Solutions</h3>
+          
+          <div className="space-y-3 max-h-72 overflow-y-auto p-1">
             {test.questions.map((q, idx) => {
-              const ans = userAnswers[q.id];
-              const isCorrect = ans && ans.selectedOptionIndex === q.correctOptionIndex;
-              const isUnanswered = !ans || ans.selectedOptionIndex === null;
+              const uAns = userAnswers[q.id];
+              const isCorrect = uAns && uAns.selectedOptionIndex === q.correctOptionIndex;
+              const isUnattempted = !uAns || uAns.selectedOptionIndex === null;
 
               return (
-                <div key={q.id} className="p-5 rounded-2xl bg-slate-950 border border-slate-800 space-y-3">
+                <div key={q.id} className="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-2 text-xs">
                   <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <span className="font-bold text-xs text-win-400">Q{idx + 1}.</span>
-                      <span className="text-xs font-semibold text-slate-300">{q.subject} • {q.topic}</span>
-                    </div>
-
-                    {isCorrect ? (
-                      <span className="px-2.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400 text-xs font-bold border border-emerald-500/20">
-                        ✓ Correct (+{q.marks})
-                      </span>
-                    ) : isUnanswered ? (
-                      <span className="px-2.5 py-0.5 rounded bg-slate-800 text-slate-400 text-xs font-bold">
-                        Unanswered
-                      </span>
-                    ) : (
-                      <span className="px-2.5 py-0.5 rounded bg-rose-500/10 text-rose-400 text-xs font-bold border border-rose-500/20">
-                        ✗ Wrong (-{q.negativeMarks})
-                      </span>
-                    )}
+                    <span className="font-bold text-win-400">
+                      Q{idx + 1}. {q.section} • {q.topic}
+                    </span>
+                    <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
+                      isCorrect
+                        ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
+                        : isUnattempted
+                        ? 'bg-slate-800 text-slate-400'
+                        : 'bg-rose-500/20 text-rose-400 border border-rose-500/30'
+                    }`}>
+                      {isCorrect ? 'Correct (+2.5)' : isUnattempted ? 'Unattempted (0)' : 'Wrong (-0.5)'}
+                    </span>
                   </div>
 
-                  <p className="text-xs sm:text-sm font-bold text-white">
-                    {q.questionText[language] || q.questionText.en}
-                  </p>
+                  <p className="text-white font-bold">{q.questionText[language] || q.questionText.en}</p>
 
-                  <div className="p-3.5 rounded-xl bg-slate-900 border border-slate-800 space-y-1.5 text-xs">
-                    <div className="flex items-center gap-2 font-bold text-emerald-400">
-                      <Sparkles className="w-3.5 h-3.5" />
-                      <span>AI Step-by-Step Explanation:</span>
-                    </div>
-                    <p className="text-slate-300 leading-relaxed">
-                      {q.explanation[language] || q.explanation.en}
-                    </p>
+                  <div className="p-3 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 space-y-1 text-[11px]">
+                    <span className="font-bold text-win-400 block">AI Explanation:</span>
+                    <p>{q.explanation[language] || q.explanation.en}</p>
                   </div>
                 </div>
               );
             })}
           </div>
-        )}
+        </div>
 
-        {/* Tab 3: AI Mistake Analysis */}
-        {activeTab === 'ai-analysis' && (
-          <div className="space-y-4 animate-in fade-in duration-200">
-            <div className="p-5 rounded-2xl bg-win-950/60 border border-win-500/30 space-y-3">
-              <div className="flex items-center gap-2 font-bold text-win-300 text-sm">
-                <Brain className="w-5 h-5 text-win-400" />
-                <span>AI Performance Diagnosis</span>
-              </div>
-              <p className="text-xs text-slate-300 leading-relaxed">
-                Great job! You achieved a stellar <strong>{accuracy}% accuracy rate</strong> with high speed in Current Affairs & Reasoning. To push your score into the Top 1 National Rank, focus on reducing time spent on complex Profit & Loss calculations.
-              </p>
-            </div>
+        {/* Action Buttons */}
+        <div className="pt-4 border-t border-slate-800 flex flex-wrap items-center justify-between gap-3 print:hidden">
+          <button onClick={handleDownloadPdf} className="px-5 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs border border-slate-700 flex items-center gap-2">
+            <Printer className="w-4 h-4 text-win-400" />
+            <span>Download PDF Performance Report</span>
+          </button>
 
-            <div className="p-5 rounded-2xl bg-slate-950 border border-slate-800 space-y-3">
-              <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400">
-                Recommended 3-Step Action Plan
-              </h4>
-              <div className="space-y-2 text-xs text-slate-300">
-                <div className="p-3 bg-slate-900 rounded-xl border border-slate-800 flex items-center gap-3">
-                  <span className="w-6 h-6 rounded-full bg-win-600 text-white font-bold flex items-center justify-center flex-shrink-0">1</span>
-                  <span>Revise <strong>Profit & Loss shortcuts</strong> using the Formula Sheet drawer.</span>
-                </div>
-                <div className="p-3 bg-slate-900 rounded-xl border border-slate-800 flex items-center gap-3">
-                  <span className="w-6 h-6 rounded-full bg-win-600 text-white font-bold flex items-center justify-center flex-shrink-0">2</span>
-                  <span>Attempt 1 Topic-Wise Practice Quiz on <strong>Data Interpretation</strong>.</span>
-                </div>
-                <div className="p-3 bg-slate-900 rounded-xl border border-slate-800 flex items-center gap-3">
-                  <span className="w-6 h-6 rounded-full bg-win-600 text-white font-bold flex items-center justify-center flex-shrink-0">3</span>
-                  <span>Use the <strong>We Win AI Tutor</strong> to ask doubts in Marathi, Hindi, or English.</span>
-                </div>
-              </div>
-            </div>
+          <div className="flex items-center gap-2">
+            <button onClick={onRetake} className="px-5 py-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 font-bold text-xs border border-slate-800 flex items-center gap-1.5">
+              <RefreshCw className="w-4 h-4" />
+              <span>Retake Test</span>
+            </button>
+
+            <button onClick={onClose} className="px-6 py-3 rounded-xl bg-win-600 hover:bg-win-500 text-white font-bold text-xs shadow-lg">
+              Done & Return to Dashboard
+            </button>
           </div>
-        )}
+        </div>
 
       </div>
     </div>

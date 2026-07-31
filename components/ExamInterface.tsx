@@ -3,7 +3,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { MockTest, Language, UserAnswer, ExamViolationLog } from '@/lib/types';
-import { Clock, ShieldCheck, ArrowLeft, ArrowRight, Bookmark, Maximize, Minimize, AlertCircle, CheckCircle2, FileText, Globe, X, Camera, AlertTriangle, Eye } from 'lucide-react';
+import { Clock, ShieldCheck, ArrowLeft, ArrowRight, Bookmark, Maximize, Minimize, AlertCircle, CheckCircle2, FileText, Globe, X, Camera, AlertTriangle, Eye, ArrowUpRight } from 'lucide-react';
 
 interface ExamInterfaceProps {
   test: MockTest;
@@ -27,10 +27,13 @@ export const ExamInterface: React.FC<ExamInterfaceProps> = ({
   const [activeWarningText, setActiveWarningText] = useState<string | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
 
-  // Exam Section & Question States
+  // Section Timers (20 Minutes = 1200 seconds per section)
+  const SECTION_TIME_LIMIT_SEC = 20 * 60; 
   const [activeSectionIdx, setActiveSectionIdx] = useState<number>(0);
+  const [sectionTimeLeftSec, setSectionTimeLeftSec] = useState<number>(SECTION_TIME_LIMIT_SEC);
+  const [totalTimeSpentSec, setTotalTimeSpentSec] = useState<number>(0);
+
   const [currentIdx, setCurrentIdx] = useState<number>(0);
-  const [timeLeftSec, setTimeLeftSec] = useState<number>(test.durationMinutes * 60);
   const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
   const [bookmarked, setBookmarked] = useState<Record<string, boolean>>({});
   const [showFormulaSheet, setShowFormulaSheet] = useState<boolean>(false);
@@ -49,7 +52,7 @@ export const ExamInterface: React.FC<ExamInterfaceProps> = ({
     return initial;
   });
 
-  // 1. Request Webcam Permission & Attach Face Feed properly
+  // 1. Request Webcam Permission & Attach Permanent Video Stream
   const requestWebcam = async () => {
     setCameraError(null);
     try {
@@ -71,7 +74,6 @@ export const ExamInterface: React.FC<ExamInterfaceProps> = ({
     }
   };
 
-  // Auto-request camera on component mount
   useEffect(() => {
     requestWebcam();
     return () => {
@@ -82,14 +84,13 @@ export const ExamInterface: React.FC<ExamInterfaceProps> = ({
     };
   }, []);
 
-  // Ensure video element plays when cameraGranted flips to true
   useEffect(() => {
     if (cameraGranted && videoRef.current && videoRef.current.srcObject) {
       videoRef.current.play().catch(e => console.error('Video autoplay error:', e));
     }
   }, [cameraGranted]);
 
-  // 2. Anti-Cheat Anti-Tab Switch & Fullscreen Monitors
+  // 2. Anti-Cheat Violations & Tab Switch Detector
   useEffect(() => {
     if (!cameraGranted) return;
 
@@ -97,7 +98,7 @@ export const ExamInterface: React.FC<ExamInterfaceProps> = ({
       setWarningCount((prev) => {
         const next = prev + 1;
         if (next >= 3) {
-          onSubmitTest(userAnswers, (test.durationMinutes * 60) - timeLeftSec);
+          onSubmitTest(userAnswers, totalTimeSpentSec);
           return next;
         }
         setActiveWarningText(`WARNING #${next} / 3: ${reason}. Repeated violations will automatically submit your exam!`);
@@ -138,23 +139,35 @@ export const ExamInterface: React.FC<ExamInterfaceProps> = ({
       document.removeEventListener('contextmenu', handleContextMenu);
       document.removeEventListener('keydown', handleKeyDown);
     };
-  }, [cameraGranted, userAnswers, timeLeftSec, test.durationMinutes, onSubmitTest]);
+  }, [cameraGranted, userAnswers, totalTimeSpentSec, onSubmitTest]);
 
-  // 3. Countdown Timer
+  // 3. Section Timer (20 Minutes Per Section) & Total Elapsed Time Tracker
   useEffect(() => {
     if (!cameraGranted) return;
+
     const timer = setInterval(() => {
-      setTimeLeftSec((prev) => {
+      setTotalTimeSpentSec(prev => prev + 1);
+
+      setSectionTimeLeftSec((prev) => {
         if (prev <= 1) {
-          clearInterval(timer);
-          onSubmitTest(userAnswers, test.durationMinutes * 60);
-          return 0;
+          // Section timer expired! Auto-advance to next section
+          if (activeSectionIdx < test.sections.length - 1) {
+            setActiveSectionIdx(activeSectionIdx + 1);
+            setCurrentIdx(0);
+            return SECTION_TIME_LIMIT_SEC;
+          } else {
+            // Final Section expired -> Submit test
+            clearInterval(timer);
+            onSubmitTest(userAnswers, totalTimeSpentSec + 1);
+            return 0;
+          }
         }
         return prev - 1;
       });
     }, 1000);
+
     return () => clearInterval(timer);
-  }, [cameraGranted, userAnswers, test.durationMinutes, onSubmitTest]);
+  }, [cameraGranted, activeSectionIdx, test.sections.length, userAnswers, totalTimeSpentSec, onSubmitTest]);
 
   // Sections filter
   const currentSection = test.sections[activeSectionIdx] || test.sections[0];
@@ -331,11 +344,11 @@ export const ExamInterface: React.FC<ExamInterfaceProps> = ({
                 <span>AI PROCTORED MODE</span>
               </span>
             </h1>
-            <p className="text-[11px] text-slate-400">Total Questions: {test.questions.length} • Maximum Marks: {test.totalMarks}</p>
+            <p className="text-[11px] text-slate-400">Total Questions: {test.questions.length} • Max Marks: {test.totalMarks}</p>
           </div>
         </div>
 
-        {/* Right Tools: Timer, Language, Fullscreen */}
+        {/* Right Tools: Section Timer, Language, Fullscreen */}
         <div className="flex items-center gap-4">
           <button onClick={() => setShowFormulaSheet(true)} className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800 text-xs font-semibold text-slate-200 border border-slate-700">
             <FileText className="w-3.5 h-3.5 text-win-400" />
@@ -351,9 +364,13 @@ export const ExamInterface: React.FC<ExamInterfaceProps> = ({
             </select>
           </div>
 
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-950 border border-win-500/40 text-win-400 font-mono font-bold text-sm shadow-inner">
+          {/* 20-Minute Section Timer Display */}
+          <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-slate-950 border border-win-500/40 text-win-400 font-mono font-bold text-sm shadow-inner">
             <Clock className="w-4 h-4 text-win-400 animate-pulse" />
-            <span>{formatTime(timeLeftSec)}</span>
+            <div className="flex flex-col text-left">
+              <span className="text-[9px] uppercase tracking-wider text-slate-400 leading-none">Section Timer</span>
+              <span>{formatTime(sectionTimeLeftSec)}</span>
+            </div>
           </div>
 
           <button onClick={toggleFullscreen} className="p-2 rounded-lg bg-slate-800 text-slate-300 hover:text-white" title="Fullscreen">
@@ -363,20 +380,25 @@ export const ExamInterface: React.FC<ExamInterfaceProps> = ({
       </header>
 
       {/* 4 Section Tabs Header */}
-      <div className="bg-slate-950 border-b border-slate-800 px-4 py-2 flex items-center gap-2 overflow-x-auto">
-        {test.sections.map((sec, sIdx) => (
-          <button
-            key={sec.id}
-            onClick={() => { setActiveSectionIdx(sIdx); setCurrentIdx(0); }}
-            className={`px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-colors border ${
-              activeSectionIdx === sIdx
-                ? 'bg-win-600 border-win-500 text-white shadow-lg'
-                : 'bg-slate-900 border-slate-800 text-slate-400 hover:text-slate-200'
-            }`}
-          >
-            <span>{sec.name}</span>
-          </button>
-        ))}
+      <div className="bg-slate-950 border-b border-slate-800 px-4 py-2 flex items-center justify-between overflow-x-auto">
+        <div className="flex items-center gap-2">
+          {test.sections.map((sec, sIdx) => (
+            <button
+              key={sec.id}
+              onClick={() => { setActiveSectionIdx(sIdx); setCurrentIdx(0); setSectionTimeLeftSec(SECTION_TIME_LIMIT_SEC); }}
+              className={`px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-colors border ${
+                activeSectionIdx === sIdx
+                  ? 'bg-win-600 border-win-500 text-white shadow-lg'
+                  : 'bg-slate-900 border-slate-800 text-slate-400 hover:text-slate-200'
+              }`}
+            >
+              <span>{sec.name} (20 Min)</span>
+            </button>
+          ))}
+        </div>
+        <div className="text-xs font-mono text-slate-400 hidden md:block">
+          Total Time Elapsed: {formatTime(totalTimeSpentSec)}
+        </div>
       </div>
 
       {/* Main Test Grid Layout */}
@@ -508,7 +530,7 @@ export const ExamInterface: React.FC<ExamInterfaceProps> = ({
           </div>
 
           <div className="pt-4 border-t border-slate-800 space-y-2">
-            <button onClick={() => onSubmitTest(userAnswers, (test.durationMinutes * 60) - timeLeftSec)} className="w-full py-3.5 px-4 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-500 text-white font-black text-sm shadow-xl shadow-emerald-500/20 hover:scale-[1.02] active:scale-95 transition-all text-center">
+            <button onClick={() => onSubmitTest(userAnswers, totalTimeSpentSec)} className="w-full py-3.5 px-4 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-500 text-white font-black text-sm shadow-xl shadow-emerald-500/20 hover:scale-[1.02] active:scale-95 transition-all text-center">
               Submit Final Test
             </button>
             <div className="text-[10px] text-slate-400 text-center">

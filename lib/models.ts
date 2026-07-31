@@ -1,8 +1,11 @@
 import mongoose, { Schema, Document } from 'mongoose';
 
+// 1. USER SCHEMA
 export interface IUserDoc extends Document {
   name: string;
   email: string;
+  phone?: string;
+  role: 'Student' | 'Admin' | 'Super Admin';
   targetExam: string;
   state: string;
   college: string;
@@ -17,6 +20,8 @@ export interface IUserDoc extends Document {
 const UserSchema = new Schema<IUserDoc>({
   name: { type: String, required: true },
   email: { type: String, required: true, unique: true },
+  phone: { type: String },
+  role: { type: String, default: 'Student' },
   targetExam: { type: String, default: 'SSC CGL & MPSC' },
   state: { type: String, default: 'Maharashtra' },
   college: { type: String, default: 'University' },
@@ -28,6 +33,7 @@ const UserSchema = new Schema<IUserDoc>({
   createdAt: { type: Date, default: Date.now }
 });
 
+// 2. QUESTION SCHEMA
 export interface IQuestionDoc extends Document {
   category: string;
   section: string;
@@ -74,5 +80,53 @@ const QuestionSchema = new Schema<IQuestionDoc>({
   createdAt: { type: Date, default: Date.now }
 });
 
+// 3. MOCK TEST RESULT SCHEMA
+export interface ITestResultDoc extends Document {
+  userId: string;
+  testId: string;
+  testTitle: string;
+  score: number;
+  maxScore: number;
+  percentile: number;
+  rank: number;
+  accuracy: number;
+  totalTimeSpentSec: number;
+  createdAt: Date;
+}
+
+const TestResultSchema = new Schema<ITestResultDoc>({
+  userId: { type: String, required: true },
+  testId: { type: String, required: true },
+  testTitle: { type: String, required: true },
+  score: { type: Number, required: true },
+  maxScore: { type: Number, required: true },
+  percentile: { type: Number, default: 95 },
+  rank: { type: Number, default: 12 },
+  accuracy: { type: Number, default: 90 },
+  totalTimeSpentSec: { type: Number, required: true },
+  createdAt: { type: Date, default: Date.now }
+});
+
+// 4. CHATBOT HISTORY SCHEMA
+export interface IChatHistoryDoc extends Document {
+  userId: string;
+  messages: { sender: 'user' | 'bot'; text: string; timestamp: Date }[];
+  createdAt: Date;
+}
+
+const ChatHistorySchema = new Schema<IChatHistoryDoc>({
+  userId: { type: String, required: true },
+  messages: [
+    {
+      sender: { type: String, enum: ['user', 'bot'] },
+      text: { type: String },
+      timestamp: { type: Date, default: Date.now }
+    }
+  ],
+  createdAt: { type: Date, default: Date.now }
+});
+
 export const UserModel = mongoose.models.User || mongoose.model<IUserDoc>('User', UserSchema);
 export const QuestionModel = mongoose.models.Question || mongoose.model<IQuestionDoc>('Question', QuestionSchema);
+export const TestResultModel = mongoose.models.TestResult || mongoose.model<ITestResultDoc>('TestResult', TestResultSchema);
+export const ChatHistoryModel = mongoose.models.ChatHistory || mongoose.model<IChatHistoryDoc>('ChatHistory', ChatHistorySchema);
